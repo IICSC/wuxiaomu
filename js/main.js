@@ -1,6 +1,6 @@
 /**
  * 雾削木个人主页 - JavaScript
- * 功能：交互逻辑、动态效果、QQ号复制
+ * 功能：交互逻辑、动态效果、QQ号复制、头像加载
  */
 
 // 复制QQ号功能
@@ -47,8 +47,39 @@ function formatNumber(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-// 滚动动画：元素进入视口时显示
-function initScrollAnimation() {
+// 头像加载失败时使用备用方案
+function handleAvatarError(imgElement) {
+    imgElement.style.display = 'none';
+    // 创建文字头像
+    const parent = imgElement.parentElement;
+    parent.innerHTML = '<span class="avatar-text">木</span>';
+    parent.style.background = 'linear-gradient(135deg, #4499d5, #2d7fb0, #f25d8e)';
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+    // 头像错误处理
+    const avatars = document.querySelectorAll('.avatar, .logo-icon');
+    avatars.forEach(avatar => {
+        const img = avatar.querySelector('img');
+        if (img) {
+            img.onerror = function() {
+                handleAvatarError(this);
+            };
+        }
+    });
+    
+    // 添加动画类样式
+    const style = document.createElement('style');
+    style.textContent = `
+        .animate-in {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // 滚动动画
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -62,29 +93,14 @@ function initScrollAnimation() {
         });
     }, observerOptions);
 
-    // 观察所有卡片
     document.querySelectorAll('.skill-card, .video-card, .blog-card, .platform-card').forEach(card => {
         card.style.opacity = '0';
         card.style.transform = 'translateY(30px)';
         card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(card);
     });
-}
-
-// 添加动画类样式
-function addAnimationStyles() {
-    const style = document.createElement('style');
-    style.textContent = `
-        .animate-in {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
-        }
-    `;
-    document.head.appendChild(style);
-}
-
-// 平滑滚动到锚点
-function initSmoothScroll() {
+    
+    // 平滑滚动
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
@@ -97,20 +113,4 @@ function initSmoothScroll() {
             }
         });
     });
-}
-
-// 页面加载完成后初始化
-document.addEventListener('DOMContentLoaded', function() {
-    addAnimationStyles();
-    initScrollAnimation();
-    initSmoothScroll();
-});
-
-// 点击播放按钮打开B站视频
-document.addEventListener('DOMContentLoaded', function() {
-    const videoLinks = {
-        '51单片机入门教程 Keil uVision5': 'https://www.bilibili.com/video/BV1kw4m1K7uA/',
-    };
-    
-    // 可以在这里添加更多视频链接
 });

@@ -118,7 +118,7 @@ nav {
     font-size: 1.3rem;
     font-weight: 700;
     box-shadow: var(--glow-blue);
-    background: url('https://i1.hdslb.com/bfs/face/cb0e2d1024deee2b0e360cf0acbb15b07436ee4d.jpg@150w_150h.jpg') center/cover no-repeat;
+    background: url('https://i1.hdslb.com/bfs/face/cb0e2d1024deee2b0e360cf0acbb15b07436ee4d.jpg') center/cover no-repeat;
 }
 
 .logo-text {
@@ -233,7 +233,7 @@ nav {
     animation: avatarFloat 4s ease-in-out infinite;
     border: 3px solid rgba(255, 255, 255, 0.2);
     overflow: hidden;
-    background: url('https://i1.hdslb.com/bfs/face/cb0e2d1024deee2b0e360cf0acbb15b07436ee4d.jpg@150w_150h.jpg') center/cover no-repeat;
+    background: url('https://i1.hdslb.com/bfs/face/cb0e2d1024deee2b0e360cf0acbb15b07436ee4d.jpg') center/cover no-repeat;
 }
 
 @keyframes avatarFloat {
