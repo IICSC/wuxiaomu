@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="雾削木 - 嵌入式开发者个人主页，B站嵌入式开发教程UP主">
+    <meta name="keywords" content="雾削木, 嵌入式, 单片机, STM32, ESP32, B站">
+    <meta name="author" content="雾削木">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="雾削木 | 嵌入式开发者">
+    <meta property="og:description" content="苦海无涯，学无止境 - 嵌入式开发者个人主页">
+    <meta property="og:type" content="website">
+    
+    <title>雾削木 | 嵌入式开发者</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>木</text></svg>">
+</head>
+<body>
+    <!-- 背景 -->
+    <div class="grid-bg"></div>
+    <div class="bg-animation"></div>
+
+    <!-- 导航 -->
+    <nav>
+        <div class="logo">
+            <div class="logo-icon"></div>
+            <span class="logo-text">雾削木</span>
+        </div>
+        <div class="nav-items">
+            <a href="#about" class="nav-item">关于</a>
+            <a href="#skills" class="nav-item">技术</a>
+            <a href="#videos" class="nav-item">视频</a>
+            <a href="#blogs" class="nav-item">博客</a>
+            <a href="#contact" class="nav-item">联系</a>
+        </div>
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- 英雄区 -->
+    <section class="hero" id="about">
+        <div class="hero-content">
+            <div class="avatar-container">
+                <div class="avatar-glow"></div>
+                <div class="avatar-rings"></div>
+                <div class="avatar"></div>
+            </div>
+            
+            <h1>雾削木</h1>
+            <p class="hero-tagline">
+                苦海无涯 · <span>学无止境</span> · 嵌入式开发者
+            </p>
+            
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-number" id="fans-count">3500+</div>
+                    <div class="stat-label">B站粉丝</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="video-count">30+</div>
+                    <div class="stat-label">教学视频</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="blog-count">100+</div>
+                    <div class="stat-label">技术文章</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">交流群</div>
+                </div>
+            </div>
+
+            <div class="social-container">
+                <a href="https://space.bilibili.com/323611141/" target="_blank" class="social-btn bilibili" title="哔哩哔哩">
+                    <span>📺</span>
+                </a>
+                <a href="https://blog.csdn.net/WuXiaoMuDeBug" target="_blank" class="social-btn csdn" title="CSDN">
+                    <span>💻</span>
+                </a>
+                <a href="https://www.cnblogs.com/foge/" target="_blank" class="social-btn cnblogs" title="博客园">
+                    <span>📝</span>
+                </a>
+                <a href="https://www.douyin.com/user/MS4wLjABAAAALEnmF2GGAYyG241RkQlxVYPIUaqX7uW7qYCUXVyyV_g" target="_blank" class="social-btn douyin" title="抖音">
+                    <span>🎵</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 技术领域 -->
+    <section class="section" id="skills">
+        <div class="section-header">
+            <h2 class="section-title">技术领域</h2>
+            <p class="section-subtitle">专注嵌入式开发 · 探索电子世界</p>
+        </div>
+        
+        <div class="skills-grid">
+            <div class="skill-card">
+                <span class="skill-icon">🔲</span>
+                <div class="skill-name">51单片机</div>
+            </div>
+            <div class="skill-card">
+                <span class="skill-icon">⚡</span>
+                <div class="skill-name">STM32</div>
+            </div>
+            <div class="skill-card">
+                <span class="skill-icon">📡</span>
+                <div class="skill-name">ESP32</div>
+            </div>
+            <div class="skill-card">
+                <span class="skill-icon">🔌</span>
+                <div class="skill-name">串口通信</div>
+            </div>
+            <div class="skill-card">
+                <span class="skill-icon">📱</span>
+                <div class="skill-name">I2C / SPI</div>
+            </div>
+            <div class="skill-card">
+                <span class="skill-icon">🖥️</span>
+                <div class="skill-name">OLED显示</div>
+            </div>
+            <div class="skill-card">
+                <span class="skill-icon">👁️</span>
+                <div class="skill-name">OpenMV视觉</div>
+            </div>
+            <div class="skill-card">
+                <span class="skill-icon">📶</span>
+                <div class="skill-name">NRF24L01</div>
+            </div>
+            <div class="skill-card">
+                <span class="skill-icon">📦</span>
+                <div class="skill-name">传感器</div>
+            </div>
+            <div class="skill-card">
+                <span class="skill-icon">⏱️</span>
+                <div class="skill-name">中断定时</div>
+            </div>
+            <div class="skill-card">
+                <span class="skill-icon">🔢</span>
+                <div class="skill-name">数码管</div>
+            </div>
+            <div class="skill-card">
+                <span class="skill-icon">💻</span>
+                <div class="skill-name">易语言</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 热门视频 -->
+    <section class="section" id="videos">
+        <div class="section-header">
+            <h2 class="section-title">热门视频</h2>
+            <p class="section-subtitle">从入门到进阶 · 手把手教学</p>
+        </div>
+        
+        <div class="video-grid">
+            <div class="video-card">
+                <div class="video-thumb">
+                    <span class="video-thumb-icon">🎬</span>
+                    <span class="video-duration">05:15</span>
+                    <button class="video-play-btn" onclick="window.open('https://www.bilibili.com/video/BV1kw4m1K7uA/','_blank')">▶</button>
+                </div>
+                <div class="video-content">
+                    <h3 class="video-title">51单片机入门教程 Keil uVision5</h3>
+                    <div class="video-meta">
+                        <div class="video-stats">
+                            <span class="video-stat">👁️ 5212</span>
+                            <span class="video-stat">❤️ 5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-thumb">
+                    <span class="video-thumb-icon">🔧</span>
+                    <span class="video-duration">10:41</span>
+                    <button class="video-play-btn">▶</button>
+                </div>
+                <div class="video-content">
+                    <h3 class="video-title">单片机最符合头文件的一集</h3>
+                    <div class="video-meta">
+                        <div class="video-stats">
+                            <span class="video-stat">👁️ 887</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-thumb">
+                    <span class="video-thumb-icon">🔬</span>
+                    <span class="video-duration">02:46</span>
+                    <button class="video-play-btn">▶</button>
+                </div>
+                <div class="video-content">
+                    <h3 class="video-title">MPU6050国产芯片移植DMP库自检不通过</h3>
+                    <div class="video-meta">
+                        <div class="video-stats">
+                            <span class="video-stat">👁️ 459</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-thumb">
+                    <span class="video-thumb-icon">👁️</span>
+                    <span class="video-duration">04:21</span>
+                    <button class="video-play-btn">▶</button>
+                </div>
+                <div class="video-content">
+                    <h3 class="video-title">电赛矩形识别激光点视觉训练</h3>
+                    <div class="video-meta">
+                        <div class="video-stats">
+                            <span class="video-stat">👁️ 413</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-thumb">
+                    <span class="video-thumb-icon">📡</span>
+                    <span class="video-duration">04:21</span>
+                    <button class="video-play-btn">▶</button>
+                </div>
+                <div class="video-content">
+                    <h3 class="video-title">天问Block ASR-PRO核心板串口下载烧录</h3>
+                    <div class="video-meta">
+                        <div class="video-stats">
+                            <span class="video-stat">👁️ 353</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-thumb">
+                    <span class="video-thumb-icon">🔌</span>
+                    <span class="video-duration">10:04</span>
+                    <button class="video-play-btn">▶</button>
+                </div>
+                <div class="video-content">
+                    <h3 class="video-title">STM32 HAL库软件I2C转硬件I2C驱动OLED</h3>
+                    <div class="video-meta">
+                        <div class="video-stats">
+                            <span class="video-stat">👁️ 370</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 技术博客 -->
+    <section class="section" id="blogs">
+        <div class="section-header">
+            <h2 class="section-title">技术博客</h2>
+            <p class="section-subtitle">记录学习 · 分享经验</p>
+        </div>
+        
+        <div class="blog-grid">
+            <div class="blog-card">
+                <h3 class="blog-title">ESP32 控制 NRF24L01 2.4G无线通信</h3>
+                <p class="blog-desc">NRF24L01是一款低成本、低功耗的2.4G无线通信模块，搭配ESP32使用通过RF24库快速实现无线数据收发。</p>
+                <div class="blog-tags">
+                    <span class="blog-tag">ESP32</span>
+                    <span class="blog-tag">NRF24L01</span>
+                    <span class="blog-tag">无线</span>
+                </div>
+            </div>
+
+            <div class="blog-card">
+                <h3 class="blog-title">OpenMV视觉追踪系统实战</h3>
+                <p class="blog-desc">基于OpenMV的视觉追踪系统，通过摄像头识别特定黑白目标并计算偏移量，支持UART串口发送数据。</p>
+                <div class="blog-tags">
+                    <span class="blog-tag">OpenMV</span>
+                    <span class="blog-tag">视觉识别</span>
+                    <span class="blog-tag">UART</span>
+                </div>
+            </div>
+
+            <div class="blog-card">
+                <h3 class="blog-title">串口屏格式化命令发送函数</h3>
+                <p class="blog-desc">串口屏在嵌入式项目中广泛应用，支持格式化字符串输入，灵活拼接变量到串口屏指令。</p>
+                <div class="blog-tags">
+                    <span class="blog-tag">串口屏</span>
+                    <span class="blog-tag">C语言</span>
+                    <span class="blog-tag">嵌入式</span>
+                </div>
+            </div>
+
+            <div class="blog-card">
+                <h3 class="blog-title">MPU6050 DMP库移植详解</h3>
+                <p class="blog-desc">MPU6050国产芯片移植DMP库的自检问题分析与解决方案，详细讲解移植步骤和注意事项。</p>
+                <div class="blog-tags">
+                    <span class="blog-tag">MPU6050</span>
+                    <span class="blog-tag">DMP</span>
+                    <span class="blog-tag">传感器</span>
+                </div>
+            </div>
+
+            <div class="blog-card">
+                <h3 class="blog-title">ESP32 PWM音乐播放器</h3>
+                <p class="blog-desc">基于ESP32的简易音乐播放器程序，通过PWM控制扬声器演奏旋律，包含标准音高定义。</p>
+                <div class="blog-tags">
+                    <span class="blog-tag">ESP32</span>
+                    <span class="blog-tag">PWM</span>
+                    <span class="blog-tag">音乐</span>
+                </div>
+            </div>
+
+            <div class="blog-card">
+                <h3 class="blog-title">STM32软件I2C转硬件I2C</h3>
+                <p class="blog-desc">详解STM32 HAL库中软件I2C转硬件I2C的配置方法，驱动0.96寸OLED显示屏。</p>
+                <div class="blog-tags">
+                    <span class="blog-tag">STM32</span>
+                    <span class="blog-tag">I2C</span>
+                    <span class="blog-tag">OLED</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 平台分布 -->
+    <section class="section" id="contact">
+        <div class="section-header">
+            <h2 class="section-title">平台分布</h2>
+            <p class="section-subtitle">多点同步 · 全面覆盖</p>
+        </div>
+        
+        <div class="platforms-grid">
+            <a href="https://space.bilibili.com/323611141/" target="_blank" class="platform-card">
+                <span class="platform-icon">📺</span>
+                <div class="platform-name">哔哩哔哩</div>
+                <div class="platform-desc">主要视频平台<br>嵌入式开发教程</div>
+            </a>
+            
+            <a href="https://blog.csdn.net/WuXiaoMuDeBug" target="_blank" class="platform-card">
+                <span class="platform-icon">💻</span>
+                <div class="platform-name">CSDN</div>
+                <div class="platform-desc">博客专家认证<br>100+技术文章</div>
+            </a>
+            
+            <a href="https://www.cnblogs.com/foge/" target="_blank" class="platform-card">
+                <span class="platform-icon">📝</span>
+                <div class="platform-name">博客园</div>
+                <div class="platform-desc">技术文章备份<br>代码分享</div>
+            </a>
+            
+            <a href="https://www.douyin.com/user/MS4wLjABAAAALEnmF2GGAYyG241RkQlxVYPIUaqX7uW7qYCUXVyyV_g" target="_blank" class="platform-card">
+                <span class="platform-icon">🎵</span>
+                <div class="platform-name">抖音</div>
+                <div class="platform-desc">短视频内容<br>日常分享</div>
+            </a>
+            
+            <a href="https://www.ixigua.com/home/62540908879" target="_blank" class="platform-card">
+                <span class="platform-icon">🍉</span>
+                <div class="platform-name">西瓜视频</div>
+                <div class="platform-desc">视频同步分发</div>
+            </a>
+            
+            <a href="https://www.toutiao.com/c/user/token/MS4wLjABAAAAzo_0slN0-XW_voaGFjFH6HxDo58Tpm1sOfWSIJcPGd8/" target="_blank" class="platform-card">
+                <span class="platform-icon">📰</span>
+                <div class="platform-name">今日头条</div>
+                <div class="platform-desc">图文内容发布</div>
+            </a>
+        </div>
+
+        <!-- QQ群 -->
+        <div class="qq-group">
+            <h3>📚 加入学习交流群</h3>
+            <div class="qq-list">
+                <div class="qq-item" onclick="copyQQ('994035508')">
+                    <div class="qq-number">994035508</div>
+                    <div class="qq-status full">①群 已满</div>
+                </div>
+                <div class="qq-item" onclick="copyQQ('806278403')">
+                    <div class="qq-number">806278403</div>
+                    <div class="qq-status full">②群 已满</div>
+                </div>
+                <div class="qq-item" onclick="copyQQ('611908808')">
+                    <div class="qq-number">611908808</div>
+                    <div class="qq-status">③群 可加入</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">雾削木</div>
+            <p class="footer-text">专注于嵌入式开发 · 分享技术干货<br>感谢每一位粉丝的支持与陪伴</p>
+            <div class="footer-links">
+                <a href="https://space.bilibili.com/323611141/" target="_blank" class="footer-link">B站主页</a>
+                <a href="https://blog.csdn.net/WuXiaoMuDeBug" target="_blank" class="footer-link">CSDN博客</a>
+                <a href="https://www.cnblogs.com/foge/" target="_blank" class="footer-link">博客园</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+</body>
+</html>
