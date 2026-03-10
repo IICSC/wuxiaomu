@@ -11,7 +11,7 @@
   <a href="https://blog.csdn.net/WuXiaoMuDeBug">
     <img src="https://img.shields.io/badge/CSDN-雾削木-fc5531?style=flat&logo=codio" alt="CSDN">
   </a>
-  <img src="https://img.shields.io/badge/粉丝-3500%2B-00a1d6?style=flat" alt="粉丝">
+  <img src="https://img.shields.io/badge/粉丝-7500%2B-00a1d6?style=flat" alt="粉丝">
   <img src="https://img.shields.io/badge/视频-30%2B-00a1d6?style=flat" alt="视频">
 </p>
 
