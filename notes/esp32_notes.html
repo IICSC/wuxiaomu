@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 学习笔记 | 雾削木</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/fontawesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .esp32-page .container { max-width: 900px; }
+        .esp32-page h3 { color: var(--main-blue-light); margin: 40px 0 20px; padding-left: 15px; border-left: 4px solid var(--main-blue); }
+        .esp32-page h4 { color: var(--text-primary); margin: 30px 0 15px; }
+        .esp32-page h5 { color: var(--main-blue); margin: 20px 0 10px; }
+        .esp32-page pre { background: #1e1e1e; border-radius: 12px; padding: 20px; overflow-x: auto; border: 1px solid var(--border-color); }
+        .esp32-page code { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #d4d4d4; }
+        .esp32-page ul { padding-left: 20px; color: #ccc; }
+        .esp32-page li { margin-bottom: 5px; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--main-blue); text-decoration: none; margin-bottom: 30px; font-weight: 500; transition: all 0.3s; }
+        .back-link:hover { color: var(--main-blue-light); transform: translateX(-5px); }
+        .page-header { text-align: center; margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid var(--border-color); }
+        .page-header h1 { font-size: 2.2rem; background: linear-gradient(90deg, #fff, var(--main-blue-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .page-header p { color: var(--text-secondary); margin-top: 10px; }
+    </style>
+</head>
+<body class="esp32-page">
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-ring" style="position:relative;"></div>
+        <div class="loader-text">Loading</div>
+    </div>
+
+    <div class="grid-bg"></div>
+    <div class="bg-animation"></div>
+
+    <nav style="position: fixed; top: 0; left: 0; right: 0; height: 70px; background: rgba(10, 10, 15, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; z-index: 1000;">
+        <div class="logo" style="display: flex; align-items: center; gap: 12px;">
+            <div class="logo-icon"></div>
+            <span class="logo-text">雾削木</span>
+        </div>
+        <div class="nav-items" style="display: flex; gap: 8px;">
+            <a href="../index.html" class="nav-item"><i class="fa-solid fa-house"></i> 返回主页</a>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 100px; padding: 40px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 30px; backdrop-filter: blur(20px);">
+        <a href="../index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> 返回主页</a>
+        
+        <div class="page-header">
+            <h1><i class="fa-solid fa-wifi" style="color: var(--main-blue);"></i> ESP32 学习笔记</h1>
+            <p>ESP-IDF 开发 | GPIO 控制 | FreeRTOS | AT 指令</p>
+        </div>
+
+        <div class="section">
+            <h3>01. GPIO 的输入输出</h3>
+
+            <h4>GPIO 输出</h4>
+            <p>这里以控制一个 LED 的输出为例，引脚输出配置有两种方式。</p>
+            
+            <h5>普通模式</h5>
+            <p>在 IDF5.x 版本中：</p>
+            <pre><code>gpio_reset_pin(GPIO_NUM_2);
+gpio_set_direction(GPIO_NUM_2, GPIO_MODE_OUTPUT);</code></pre>
+            <p>在 IDF4.x 版本中：</p>
+            <pre><code>gpio_pad_select_gpio(GPIO_NUM_2);
+gpio_set_direction(GPIO_NUM_2, GPIO_MODE_OUTPUT);</code></pre>
+
+            <h5>结构体模式</h5>
+            <pre><code>void bsp_led_init()
+{
+    gpio_config_t io_conf = {};
+    io_conf.intr_type = GPIO_INTR_DISABLE;
+    io_conf.mode = GPIO_MODE_OUTPUT;
+    io_conf.pin_bit_mask = (1ULL<<GPIO_NUM_2);
+    io_conf.pull_down_en = 0;
+    io_conf.pull_up_en = 1;
+    gpio_config(&io_conf);
+}</code></pre>
+
+            <h5>控制引脚电平</h5>
+            <pre><code>gpio_set_level(GPIO_NUM_2, 0);
+gpio_set_level(GPIO_NUM_2, 1);</code></pre>
+
+            <h4>GPIO 输入 -- 普通模式</h4>
+            <p>这里以检测一个按键的输入为例。</p>
+
+            <h5>IDF5.x</h5>
+            <pre><code>gpio_reset_pin(GPIO_NUM_3);
+gpio_set_direction(GPIO_NUM_3, GPIO_MODE_INPUT);</code></pre>
+            <h5>IDF4.x</h5>
+            <pre><code>gpio_pad_select_gpio(GPIO_NUM_3);
+gpio_set_direction(GPIO_NUM_3, GPIO_MODE_INPUT);</code></pre>
+
+            <h5>结构体模式</h5>
+            <pre><code>void bsp_key_init()
+{
+    gpio_config_t io_conf = {};
+    io_conf.intr_type = GPIO_INTR_DISABLE;
+    io_conf.mode = GPIO_MODE_INPUT;
+    io_conf.pin_bit_mask = (1ULL<<GPIO_NUM_3);
+    io_conf.pull_down_en = 0;
+    io_conf.pull_up_en = 1;
+    gpio_config(&io_conf);
+}</code></pre>
+
+            <h5>获得引脚电平</h5>
+            <pre><code>gpio_get_level(GPIO_NUM_3);</code></pre>
+
+            <h4>GPIO 输入 -- 中断模式</h4>
+
+            <h5>触发方式</h5>
+            <pre><code>GPIO_INTR_DISABLE    // 禁用GPIO中断
+GPIO_INTR_POSEDGE    // 上升沿
+GPIO_INTR_NEGEDGE    // 下降沿
+GPIO_INTR_ANYEDGE    // 上升沿和下降沿
+GPIO_INTR_LOW_LEVEL  // 输入低电平触发
+GPIO_INTR_HIGH_LEVEL // 输入高电平触发</code></pre>
+
+            <h5>IDF5.x 中断配置</h5>
+            <pre><code>gpio_reset_pin(GPIO_NUM_3);
+gpio_set_direction(GPIO_NUM_3, GPIO_MODE_INPUT);
+gpio_intr_enable(GPIO_NUM_3);
+gpio_set_intr_type(GPIO_NUM_3, GPIO_INTR_NEGEDGE);
+gpio_pullup_en(GPIO_NUM_3);</code></pre>
+
+            <h5>结构体模式</h5>
+            <pre><code>void bsp_key_init()
+{
+    gpio_config_t io_conf = {};
+    io_conf.intr_type = GPIO_INTR_NEGEDGE;
+    io_conf.mode = GPIO_MODE_INPUT;
+    io_conf.pin_bit_mask = (1ULL<<GPIO_NUM_3);
+    io_conf.pull_down_en = 0;
+    io_conf.pull_up_en = 1;
+    gpio_config(&io_conf);
+}</code></pre>
+
+            <h5>配置 FreeRTOS 任务和队列</h5>
+            <p>注意：gpio_isr_handler 中断回调函数加载在 IRAM_ATTR 中，不能执行 printf 等耗时操作。</p>
+            <pre><code>void gpio_intr_init(void)
+{
+    gpio_install_isr_service(ESP_INTR_FLAG_LEVEL1);
+    gpio_isr_handler_add(GPIO_NUM_3, gpio_isr_handler, (void*) GPIO_NUM_3);
+    gpio_evt_queue = xQueueCreate(10, sizeof(uint32_t));
+}</code></pre>
+
+            <h5>中断任务处理</h5>
+            <pre><code>static void IRAM_ATTR gpio_isr_handler(void* arg)
+{
+    uint32_t gpio_num = (uint32_t) arg;
+    xQueueSendFromISR(gpio_evt_queue, &gpio_num, NULL);
+}</code></pre>
+
+            <h3>ESP32 常见问题</h3>
+
+            <h4>仅输入引脚 (GPIO 34-39)</h4>
+            <p>这些引脚没有内部上拉或下拉电阻，不能用作输出。</p>
+            <ul>
+                <li>GPIO 34 / GPIO 35 / GPIO 36</li>
+                <li>GPIO 37 / GPIO 38 / GPIO 39</li>
+            </ul>
+
+            <h4>集成 SPI 闪存引脚 (GPIO 6-11)</h4>
+            <p>这些引脚连接到 ESP-WROOM-32 芯片上的集成 SPI 闪存，不建议用于其他用途。</p>
+            <ul>
+                <li>GPIO 6 (SCK/CLK) / GPIO 7 (SDO/SD0)</li>
+                <li>GPIO 8 (SDI/SD1) / GPIO 9 (SHD/SD2)</li>
+                <li>GPIO 10 (SWP/SD3) / GPIO 11 (CSC/CMD)</li>
+            </ul>
+
+            <h4>电容式触摸 GPIO</h4>
+            <p>ESP32 有 10 个内部电容式触摸传感器，可检测手指触摸并用于唤醒深度睡眠。</p>
+            <ul>
+                <li>T0 (GPIO 4) / T1 (GPIO 0) / T2 (GPIO 2)</li>
+                <li>T3 (GPIO 15) / T4 (GPIO 13) / T5 (GPIO 12)</li>
+                <li>T6 (GPIO 14) / T7 (GPIO 27)</li>
+                <li>T8 (GPIO 33) / T9 (GPIO 32)</li>
+            </ul>
+
+            <h3>ESP8266 AT 指令使用</h3>
+
+            <h4>基础 AT 指令</h4>
+            <pre><code>AT                      // 测试
+AT+CWMODE?              // 查看模式 Station/SoftAP/Station+SoftAP
+AT+CWMODE=1             // 设置为 Station
+AT+CWLAP                // 列出周围 WiFi
+AT+CWJAP="SSID","PASS"  // 连接到 WiFi
+AT+CIPSTA?              // 查看本机 IP
+AT+CWQAP                // 断开 WiFi 连接</code></pre>
+
+            <h4>TCP 透传连接</h4>
+            <pre><code>AT+CIPMUX?              // 查询传输模式
+AT+CIPMODE=1            // 设置成透传
+AT+CIPSTART="TCP","192.168.137.123",8888  // TCP 连接
+AT+CIPSEND              // 进入透传
++++                     // 退出透传 (不发送新行)</code></pre>
+        </div>
+    </div>
+
+    <footer style="margin-top: 50px; padding: 40px 0; text-align: center; border-top: 1px solid var(--border-color);">
+        <p style="color: var(--text-secondary); font-size: 0.85rem;">© 2026 雾削木 | ESP32 学习笔记</p>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

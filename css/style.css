@@ -13,9 +13,95 @@
     --border-color: rgba(68, 153, 213, 0.2);
     --glow-blue: 0 0 30px rgba(68, 153, 213, 0.4);
     --glow-pink: 0 0 30px rgba(242, 93, 142, 0.3);
+    --pcb-green: #1a3a2a;
+    --pcb-trace: rgba(68, 153, 213, 0.15);
+    --solder-pad: rgba(68, 153, 213, 0.3);
+    --led-green: #00ff88;
+    --led-red: #ff3355;
+    --chip-bg: #0d1117;
+    --pin-color: #c0a050;
 }
 
-/* 重置样式 */
+/* 导航栏活跃状态 */
+.nav-item.active {
+    color: var(--main-blue) !important;
+}
+
+.nav-item.active::after {
+    width: 60% !important;
+}
+
+/* 视频卡片链接样式 */
+a.video-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    cursor: pointer;
+}
+
+a.video-card:hover {
+    text-decoration: none;
+}
+
+a.video-card .video-title {
+    color: var(--text-primary);
+    transition: color 0.3s;
+}
+
+a.video-card:hover .video-title {
+    color: var(--main-blue-light);
+}
+
+/* Fonts - Optimized with font-display:swap */
+@font-face {
+    font-family: 'Noto Sans SC';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/notosanssc/v26/k3kCo84MPvpLmixcA63oeALZMKD9j_Y.woff2) format('woff2');
+}
+@font-face {
+    font-family: 'Noto Sans SC';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/notosanssc/v26/k3kLo84MPvpLmixcA63oeALhIc-h.woff2) format('woff2');
+}
+@font-face {
+    font-family: 'Noto Sans SC';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/notosanssc/v26/k3kCo84MPvpLmixcA63oeALZ3Kj9j_Y.woff2) format('woff2');
+}
+@font-face {
+    font-family: 'Noto Sans SC';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/notosanssc/v26/k3kCo84MPvpLmixcA63oeALZJK79j_Y.woff2) format('woff2');
+}
+@font-face {
+    font-family: 'Noto Sans SC';
+    font-style: normal;
+    font-weight: 900;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/notosanssc/v26/k3kCo84MPvpLmixcA63oeALZPK_9j_Y.woff2) format('woff2');
+}
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxjPVmUsaaDhw.woff2) format('woff2');
+}
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxjPVmUsaaDhw.woff2) format('woff2');
+}
 * {
     margin: 0;
     padding: 0;
@@ -461,6 +547,7 @@ nav {
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .skill-card::before {
@@ -475,6 +562,16 @@ nav {
     transition: transform 0.3s;
 }
 
+.skill-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(68, 153, 213, 0.08), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
 .skill-card:hover {
     transform: translateY(-10px);
     background: var(--bg-card-hover);
@@ -486,10 +583,29 @@ nav {
     transform: scaleX(1);
 }
 
+.skill-card:hover::after {
+    opacity: 1;
+}
+
+.skill-card:hover .skill-icon {
+    transform: scale(1.15) rotate(-5deg);
+}
+
+.skill-card:hover .skill-name {
+    color: var(--main-blue-light);
+}
+
 .skill-icon {
     font-size: 2.2rem;
     margin-bottom: 12px;
     display: block;
+    transition: transform 0.3s;
+}
+
+.skill-icon i {
+    background: linear-gradient(135deg, var(--main-blue-light), var(--accent-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .skill-name {
@@ -582,6 +698,61 @@ nav {
     border: none;
 }
 
+.video-play-btn:hover {
+    background: var(--main-blue);
+    box-shadow: 0 0 30px rgba(68, 153, 213, 0.6);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.video-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    z-index: 2;
+    backdrop-filter: blur(10px);
+}
+
+.video-badge.hot {
+    background: rgba(242, 93, 142, 0.9);
+    color: white;
+    animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(242, 93, 142, 0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(242, 93, 142, 0); }
+}
+
+.video-tag {
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    border: 1px solid;
+}
+
+.video-tag.beginner {
+    background: rgba(76, 175, 80, 0.15);
+    color: #4caf50;
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+.video-tag.intermediate {
+    background: rgba(255, 152, 0, 0.15);
+    color: #ff9800;
+    border-color: rgba(255, 152, 0, 0.3);
+}
+
+.video-tag.advanced {
+    background: rgba(244, 67, 54, 0.15);
+    color: #f44336;
+    border-color: rgba(244, 67, 54, 0.3);
+}
+
 .video-card:hover .video-play-btn {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
@@ -611,6 +782,15 @@ nav {
     font-size: 0.85rem;
 }
 
+.video-thumb-icon i {
+    font-size: 4.5rem;
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(135deg, var(--main-blue-light), var(--accent-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 .video-stats {
     display: flex;
     gap: 15px;
@@ -620,6 +800,11 @@ nav {
     display: flex;
     align-items: center;
     gap: 5px;
+}
+
+.video-stat i {
+    font-size: 0.75rem;
+    opacity: 0.7;
 }
 
 /* 博客卡片 */
@@ -636,6 +821,7 @@ nav {
     padding: 22px;
     transition: all 0.4s;
     position: relative;
+    overflow: hidden;
 }
 
 .blog-card::before {
@@ -651,6 +837,19 @@ nav {
     transition: opacity 0.3s;
 }
 
+.blog-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(68, 153, 213, 0.06), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
 .blog-card:hover {
     transform: translateY(-8px);
     border-color: var(--main-blue);
@@ -658,6 +857,10 @@ nav {
 }
 
 .blog-card:hover::before {
+    opacity: 1;
+}
+
+.blog-card:hover::after {
     opacity: 1;
 }
 
@@ -741,6 +944,17 @@ nav {
     font-size: 2.8rem;
     margin-bottom: 12px;
     display: block;
+}
+
+.platform-icon i {
+    background: linear-gradient(135deg, var(--main-blue-light), var(--accent-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: transform 0.3s;
+}
+
+.platform-card:hover .platform-icon i {
+    transform: scale(1.1);
 }
 
 .platform-name {
@@ -859,6 +1073,282 @@ footer {
     color: var(--main-blue);
 }
 
+/* 个人知识库网格 */
+.notes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+/* 笔记卡片样式 */
+.note-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 35px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.note-card:hover {
+    transform: translateY(-10px);
+    background: var(--bg-card-hover);
+    border-color: var(--main-blue);
+    box-shadow: var(--glow-blue), 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* 微光扫过动画 */
+.note-card::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 50%;
+    height: 300%;
+    background: linear-gradient(
+        to right,
+        transparent,
+        rgba(255, 255, 255, 0.05),
+        transparent
+    );
+    transform: rotate(45deg);
+    transition: 0s;
+}
+
+.note-card:hover::after {
+    left: 150%;
+    transition: 0.8s;
+}
+
+.note-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at top right, rgba(68, 153, 213, 0.1), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none; /* 防止遮挡点击事件 */
+}
+
+.note-card:hover::before {
+    opacity: 1;
+}
+
+.note-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(68, 153, 213, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--main-blue);
+    margin-bottom: 10px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.note-card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.note-card-desc {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    flex-grow: 1;
+}
+
+.note-links {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.note-card-link {
+    color: var(--main-blue);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s;
+}
+
+/* 让整个卡片区域都可点击 */
+.note-card-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+.note-card-link:hover {
+    color: var(--main-blue-light);
+    transform: translateX(5px);
+}
+
+.note-card-link::after {
+    content: '→';
+    font-size: 1.1rem;
+}
+
+/* 笔记容器样式 */
+.container {
+    max-width: 1000px;
+    margin: 100px auto;
+    padding: 40px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
+    backdrop-filter: blur(20px);
+}
+
+.container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    text-align: center;
+    background: linear-gradient(90deg, #fff, var(--main-blue-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 笔记详情页布局 */
+.note-page .container {
+    max-width: 1400px;
+    margin: 100px auto 50px;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 40px;
+    background: transparent;
+    border: none;
+    backdrop-filter: none;
+    padding: 0;
+}
+
+/* 侧边栏导航 */
+.note-sidebar {
+    position: sticky;
+    top: 100px;
+    height: calc(100vh - 150px);
+    background: rgba(10, 10, 15, 0.6);
+    backdrop-filter: blur(30px);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 30px 20px;
+    overflow-y: auto;
+}
+
+.sidebar-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--main-blue-light);
+    margin-bottom: 20px;
+    padding-left: 10px;
+    border-left: 4px solid var(--main-blue);
+}
+
+.sidebar-menu {
+    list-style: none;
+}
+
+.menu-item {
+    margin-bottom: 5px;
+}
+
+.menu-link {
+    display: block;
+    padding: 10px 15px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+}
+
+.menu-link:hover {
+    color: var(--main-blue);
+    background: rgba(68, 153, 213, 0.1);
+}
+
+.menu-link.active {
+    color: var(--text-primary);
+    background: var(--main-blue);
+    box-shadow: var(--glow-blue);
+}
+
+.submenu {
+    list-style: none;
+    padding-left: 20px;
+    margin-top: 5px;
+}
+
+.submenu .menu-link {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+}
+
+/* 主内容区 */
+.note-main {
+    background: rgba(10, 10, 15, 0.6);
+    backdrop-filter: blur(30px);
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
+    padding: 50px;
+}
+
+.note-header {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 30px;
+    margin-bottom: 50px;
+}
+
+.note-article h3 {
+    font-size: 1.8rem;
+    margin: 50px 0 25px;
+    color: var(--main-blue-light);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.note-article h3::before {
+    content: '';
+    width: 6px;
+    height: 30px;
+    background: var(--main-blue);
+    border-radius: 3px;
+}
+
+/* 响应式调整 */
+@media (max-width: 1024px) {
+    .note-page .container {
+        grid-template-columns: 1fr;
+    }
+    .note-sidebar {
+        position: relative;
+        top: 0;
+        height: auto;
+        margin-bottom: 30px;
+    }
+}
+
 /* 响应式 */
 @media (max-width: 768px) {
     .hero h1 {
@@ -942,4 +1432,1527 @@ footer {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--main-blue-light);
+}
+
+/* ========== 终极特效系统 ========== */
+
+/* 流光边框动画 */
+@keyframes borderGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.skill-card::before,
+.platform-card::after {
+    background-size: 200% 200%;
+    animation: borderGlow 3s ease infinite;
+}
+
+/* 霓虹脉冲 */
+@keyframes neonPulse {
+    0%, 100% { 
+        box-shadow: 0 0 5px var(--main-blue), 
+                    0 0 10px var(--main-blue), 
+                    0 0 20px var(--main-blue), 
+                    0 0 40px rgba(68, 153, 213, 0.2); 
+    }
+    50% { 
+        box-shadow: 0 0 10px var(--main-blue), 
+                    0 0 20px var(--main-blue), 
+                    0 0 40px var(--main-blue), 
+                    0 0 80px rgba(68, 153, 213, 0.4); 
+    }
+}
+
+/* 卡片悬浮阴影增强 */
+.skill-card:hover,
+.video-card:hover,
+.blog-card:hover,
+.platform-card:hover,
+.note-card:hover {
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4),
+                0 0 30px var(--main-blue-glow);
+}
+
+/* 文字选择高亮 */
+::selection {
+    background: rgba(68, 153, 213, 0.3);
+    color: white;
+}
+
+::-moz-selection {
+    background: rgba(68, 153, 213, 0.3);
+    color: white;
+}
+
+/* 链接点击波纹效果 */
+.social-btn:active,
+.platform-card:active,
+.qq-item:active {
+    transform: scale(0.95);
+}
+
+/* 加载动画 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-content > * {
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.hero-content > *:nth-child(1) { animation-delay: 0.1s; }
+.hero-content > *:nth-child(2) { animation-delay: 0.3s; }
+.hero-content > *:nth-child(3) { animation-delay: 0.5s; }
+.hero-content > *:nth-child(4) { animation-delay: 0.7s; }
+
+/* 渐变文字增强 */
+.hero h1 {
+    text-shadow: 0 0 40px rgba(68, 153, 213, 0.3);
+}
+
+/* 平台卡片图标渐变 */
+.platform-icon i,
+.skill-icon i {
+    background-size: 200% 200%;
+    animation: borderGlow 4s ease infinite;
+}
+
+/* 视频缩略图悬停增强 */
+.video-card:hover .video-thumb::before {
+    opacity: 0.2;
+    animation-duration: 2s;
+}
+
+.video-card:hover .video-thumb-icon i {
+    transform: scale(1.2);
+    transition: transform 0.3s ease;
+}
+
+.video-thumb-icon i {
+    transition: transform 0.3s ease;
+}
+
+/* 博客卡片标题悬停 */
+.blog-card:hover .blog-title {
+    color: var(--main-blue-light);
+    transition: color 0.3s ease;
+}
+
+/* 技能卡片图标悬停 */
+.skill-card:hover .skill-icon i {
+    filter: drop-shadow(0 0 8px var(--main-blue));
+}
+
+/* QQ群状态标签 */
+.qq-status.full {
+    position: relative;
+    padding-left: 15px;
+}
+
+.qq-status.full::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-pink);
+    animation: statusPulse 2s ease-in-out infinite;
+}
+
+.qq-status:not(.full) {
+    position: relative;
+    padding-left: 15px;
+}
+
+.qq-status:not(.full)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4caf50;
+    animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+    0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
+    50% { opacity: 0.5; transform: translateY(-50%) scale(0.8); }
+}
+
+/* 笔记页面侧边栏工具链接图标 */
+.sidebar-menu .menu-link i {
+    width: 20px;
+    text-align: center;
+    margin-right: 8px;
+    color: var(--main-blue);
+    font-size: 0.85rem;
+}
+
+/* 代码块行号样式 */
+pre code {
+    display: block;
+    overflow-x: auto;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+/* 文章元数据标签悬停 */
+.meta-tag {
+    transition: all 0.3s ease;
+}
+
+.meta-tag:hover {
+    background: rgba(68, 153, 213, 0.15);
+    border-color: var(--main-blue);
+    transform: translateY(-2px);
+}
+
+/* 侧边栏菜单活跃状态指示器 */
+.menu-link.active {
+    position: relative;
+}
+
+.menu-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background: var(--main-blue);
+    border-radius: 2px;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+    .video-thumb-icon i {
+        font-size: 3rem;
+    }
+    
+    .skill-icon i,
+    .platform-icon i {
+        font-size: inherit;
+    }
+}
+
+/* ========== 页面加载动画 ========== */
+.page-loader {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-dark);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.page-loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-ring {
+    width: 60px;
+    height: 60px;
+    border: 3px solid transparent;
+    border-top-color: var(--main-blue);
+    border-right-color: var(--accent-pink);
+    border-radius: 50%;
+    animation: loaderSpin 1s linear infinite;
+}
+
+.loader-ring::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border: 3px solid transparent;
+    border-bottom-color: var(--main-blue-light);
+    border-left-color: var(--accent-pink);
+    border-radius: 50%;
+    animation: loaderSpin 0.6s linear reverse infinite;
+}
+
+.loader-text {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    animation: loaderFade 1.5s ease-in-out infinite;
+}
+
+@keyframes loaderSpin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes loaderFade {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+/* ========== 统计卡片增强 ========== */
+.stat-item {
+    position: relative;
+    padding: 15px 25px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(68, 153, 213, 0.1);
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    background: rgba(68, 153, 213, 0.08);
+    border-color: var(--main-blue);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(68, 153, 213, 0.15);
+}
+
+.stat-item::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--main-blue), var(--accent-pink));
+    transition: width 0.3s ease;
+}
+
+.stat-item:hover::after {
+    width: 80%;
+}
+
+/* ========== 社交按钮增强 ========== */
+.social-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.social-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.social-btn:hover::after {
+    width: 200%;
+    height: 200%;
+}
+
+.social-btn span {
+    position: relative;
+    z-index: 2;
+}
+
+/* ========== 视频卡片增强 ========== */
+.video-card {
+    position: relative;
+}
+
+.video-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 21px;
+    padding: 1px;
+    background: linear-gradient(135deg, transparent 40%, var(--main-blue) 50%, var(--accent-pink) 60%, transparent 70%);
+    background-size: 300% 300%;
+    background-position: 100% 100%;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease, background-position 0.6s ease;
+    pointer-events: none;
+}
+
+.video-card:hover::before {
+    opacity: 1;
+    background-position: 0% 0%;
+    animation: borderGlow 3s ease infinite;
+}
+
+/* ========== 博客卡片增强 ========== */
+.blog-card {
+    cursor: pointer;
+}
+
+.blog-card::after {
+    transition: opacity 0.4s ease;
+}
+
+.blog-card:hover {
+    transform: translateY(-8px) scale(1.01);
+}
+
+/* ========== 平台卡片增强 ========== */
+.platform-card {
+    cursor: pointer;
+}
+
+.platform-card:hover {
+    transform: translateY(-8px) scale(1.02);
+}
+
+.platform-card:hover .platform-name {
+    color: var(--main-blue-light);
+    transition: color 0.3s ease;
+}
+
+/* ========== 笔记卡片增强 ========== */
+.note-card {
+    cursor: pointer;
+}
+
+.note-card:hover .note-icon {
+    background: linear-gradient(135deg, var(--main-blue), var(--accent-pink));
+    color: white;
+    transform: rotate(-5deg) scale(1.1);
+    transition: all 0.3s ease;
+}
+
+.note-icon {
+    transition: all 0.3s ease;
+}
+
+/* ========== 分区标题增强 ========== */
+.section-header {
+    position: relative;
+}
+
+.section-header::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--main-blue), var(--accent-pink));
+    margin: 15px auto 0;
+    border-radius: 2px;
+    opacity: 0;
+    transform: scaleX(0);
+    transition: all 0.6s ease;
+}
+
+.section-header.active::after {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+/* ========== 代码块语法高亮模拟 ========== */
+pre code {
+    counter-reset: line;
+}
+
+pre code .line {
+    display: block;
+    position: relative;
+}
+
+/* ========== 笔记页面文章卡片增强 ========== */
+.note-article {
+    position: relative;
+    overflow: hidden;
+}
+
+.note-article::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--main-blue), var(--accent-pink), var(--main-blue));
+    background-size: 200% 100%;
+    animation: borderGlow 3s ease infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.note-article:hover::before {
+    opacity: 1;
+}
+
+/* ========== 滚动进度条增强 ========== */
+.progress-bar {
+    box-shadow: 0 0 10px var(--main-blue), 0 0 20px rgba(68, 153, 213, 0.3);
+}
+
+/* ========== 回到顶部按钮增强 ========== */
+.back-to-top {
+    position: relative;
+}
+
+.back-to-top::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--main-blue), var(--accent-pink));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.back-to-top:hover::before {
+    opacity: 1;
+}
+
+/* ========== 搜索框增强 ========== */
+.search-input {
+    position: relative;
+}
+
+.search-box::before {
+    content: '\f002';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ========== 侧边栏折叠箭头 ========== */
+.menu-item.has-submenu > .menu-link::after {
+    content: '\f107';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.3s ease;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.menu-item.has-submenu.open > .menu-link::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.menu-item.has-submenu > .menu-link {
+    position: relative;
+    padding-right: 35px;
+}
+
+/* ========== 工具箱链接增强 ========== */
+.sidebar-title i {
+    margin-right: 8px;
+    color: var(--accent-pink);
+}
+
+/* ========== 响应式增强 ========== */
+@media (max-width: 768px) {
+    .stat-item {
+        padding: 10px 15px;
+    }
+    
+    .stat-number {
+        font-size: 1.8rem;
+    }
+    
+    .stats-container {
+        gap: 15px;
+    }
+    
+    .section-header::after {
+        width: 40px;
+    }
+}
+
+/* ============================================================
+   PCB 电路板风格特效系统
+   ============================================================ */
+
+/* PCB 走线背景纹理 */
+.pcb-traces-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    opacity: 0.4;
+    background-image: 
+        /* 水平走线 */
+        linear-gradient(0deg, transparent 49.5%, var(--pcb-trace) 49.5%, var(--pcb-trace) 50.5%, transparent 50.5%),
+        /* 垂直走线 */
+        linear-gradient(90deg, transparent 49.5%, var(--pcb-trace) 49.5%, var(--pcb-trace) 50.5%, transparent 50.5%);
+    background-size: 100px 100px;
+    pointer-events: none;
+}
+
+/* PCB 焊盘装饰 */
+.solder-pad {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--solder-pad);
+    border: 2px solid var(--main-blue);
+    box-shadow: 0 0 6px rgba(68, 153, 213, 0.3);
+}
+
+.solder-pad::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--main-blue);
+}
+
+/* LED 指示灯动画 */
+@keyframes ledBlink {
+    0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--led-green), 0 0 16px rgba(0, 255, 136, 0.3); }
+    50% { opacity: 0.3; box-shadow: none; }
+}
+
+@keyframes ledPulse {
+    0%, 100% { box-shadow: 0 0 4px var(--led-green); }
+    50% { box-shadow: 0 0 12px var(--led-green), 0 0 24px rgba(0, 255, 136, 0.4); }
+}
+
+.led-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.led-indicator.green {
+    background: var(--led-green);
+    animation: ledPulse 2s ease-in-out infinite;
+}
+
+.led-indicator.red {
+    background: var(--led-red);
+    animation: ledBlink 1.5s ease-in-out infinite;
+}
+
+.led-indicator.blue {
+    background: var(--main-blue);
+    animation: ledPulse 2.5s ease-in-out infinite;
+}
+
+.led-indicator.yellow {
+    background: #ffcc00;
+    animation: ledBlink 1s ease-in-out infinite;
+}
+
+/* 芯片 IC 封装风格 */
+.ic-chip {
+    position: relative;
+    background: var(--chip-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 20px 25px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    overflow: hidden;
+}
+
+.ic-chip::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1.5px solid var(--text-secondary);
+    opacity: 0.4;
+}
+
+.ic-chip::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 20px;
+    right: 20px;
+    height: 2px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--pin-color) 0px,
+        var(--pin-color) 8px,
+        transparent 8px,
+        transparent 16px
+    );
+    opacity: 0.6;
+}
+
+/* IC 引脚（左侧） */
+.ic-pins-left,
+.ic-pins-right {
+    position: absolute;
+    top: 15px;
+    bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.ic-pins-left {
+    left: -8px;
+}
+
+.ic-pins-right {
+    right: -8px;
+}
+
+.ic-pin {
+    width: 8px;
+    height: 3px;
+    background: var(--pin-color);
+    border-radius: 1px;
+    opacity: 0.7;
+}
+
+/* 电路图风格分割线 */
+.circuit-divider {
+    position: relative;
+    height: 30px;
+    margin: 40px 0;
+}
+
+.circuit-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--main-blue) 20%, var(--main-blue) 80%, transparent);
+    opacity: 0.3;
+}
+
+.circuit-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--bg-dark);
+    border: 2px solid var(--main-blue);
+    opacity: 0.5;
+}
+
+/* 示波器波形动画 */
+.oscilloscope-wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    overflow: hidden;
+    opacity: 0.15;
+    pointer-events: none;
+}
+
+.oscilloscope-wave svg {
+    position: absolute;
+    bottom: 0;
+    width: 200%;
+    height: 100%;
+    animation: oscilloscopeScroll 4s linear infinite;
+}
+
+@keyframes oscilloscopeScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* 信号强度指示器 */
+.signal-bars {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+.signal-bars .bar {
+    width: 3px;
+    background: var(--main-blue);
+    border-radius: 1px;
+    animation: signalPulse 1.5s ease-in-out infinite;
+}
+
+.signal-bars .bar:nth-child(1) { height: 4px; animation-delay: 0s; }
+.signal-bars .bar:nth-child(2) { height: 8px; animation-delay: 0.15s; }
+.signal-bars .bar:nth-child(3) { height: 12px; animation-delay: 0.3s; }
+.signal-bars .bar:nth-child(4) { height: 16px; animation-delay: 0.45s; }
+
+@keyframes signalPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+/* 二进制/十六进制装饰文字 */
+.hex-decoration {
+    position: absolute;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--main-blue);
+    opacity: 0.1;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+}
+
+/* 电路板风格区块标题 */
+.pcb-section-title {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pcb-section-title::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--main-blue);
+    border-radius: 3px;
+    position: relative;
+}
+
+.pcb-section-title::after {
+    content: '';
+    display: inline-block;
+    width: 30px;
+    height: 1px;
+    background: var(--main-blue);
+    opacity: 0.5;
+}
+
+/* 芯片引脚编号标记 */
+.pin-marker {
+    position: absolute;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--pin-color);
+    opacity: 0.4;
+}
+
+/* 电路板测试点 */
+.test-point {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--main-blue);
+    background: transparent;
+    opacity: 0.3;
+}
+
+.test-point::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--main-blue);
+    opacity: 0.5;
+}
+
+/* 时钟信号动画 */
+@keyframes clockTick {
+    0%, 49% { transform: scaleY(1); }
+    50%, 100% { transform: scaleY(-1); }
+}
+
+.clock-signal {
+    display: inline-block;
+    width: 40px;
+    height: 16px;
+    position: relative;
+    vertical-align: middle;
+}
+
+.clock-signal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+        linear-gradient(0deg, var(--main-blue) 0%, var(--main-blue) 40%, transparent 40%, transparent 60%, var(--main-blue) 60%, var(--main-blue) 100%);
+    background-size: 8px 100%;
+    -webkit-mask: 
+        linear-gradient(90deg, 
+            var(--main-blue) 0px, var(--main-blue) 4px, 
+            transparent 4px, transparent 6px, 
+            var(--main-blue) 6px, var(--main-blue) 10px, 
+            transparent 10px, transparent 12px,
+            var(--main-blue) 12px, var(--main-blue) 16px,
+            transparent 16px, transparent 18px,
+            var(--main-blue) 18px, var(--main-blue) 22px,
+            transparent 22px, transparent 24px,
+            var(--main-blue) 24px, var(--main-blue) 28px,
+            transparent 28px, transparent 30px,
+            var(--main-blue) 30px, var(--main-blue) 34px,
+            transparent 34px, transparent 36px,
+            var(--main-blue) 36px, var(--main-blue) 40px);
+    mask: 
+        linear-gradient(90deg, 
+            var(--main-blue) 0px, var(--main-blue) 4px, 
+            transparent 4px, transparent 6px, 
+            var(--main-blue) 6px, var(--main-blue) 10px, 
+            transparent 10px, transparent 12px,
+            var(--main-blue) 12px, var(--main-blue) 16px,
+            transparent 16px, transparent 18px,
+            var(--main-blue) 18px, var(--main-blue) 22px,
+            transparent 22px, transparent 24px,
+            var(--main-blue) 24px, var(--main-blue) 28px,
+            transparent 28px, transparent 30px,
+            var(--main-blue) 30px, var(--main-blue) 34px,
+            transparent 34px, transparent 36px,
+            var(--main-blue) 36px, var(--main-blue) 40px);
+    animation: oscilloscopeScroll 2s linear infinite;
+}
+
+/* 嵌入式风格状态标签 */
+.embedded-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: 1px solid;
+}
+
+.embedded-status.active {
+    background: rgba(0, 255, 136, 0.1);
+    border-color: rgba(0, 255, 136, 0.3);
+    color: var(--led-green);
+}
+
+.embedded-status.warning {
+    background: rgba(255, 204, 0, 0.1);
+    border-color: rgba(255, 204, 0, 0.3);
+    color: #ffcc00;
+}
+
+.embedded-status.error {
+    background: rgba(255, 51, 85, 0.1);
+    border-color: rgba(255, 51, 85, 0.3);
+    color: var(--led-red);
+}
+
+.embedded-status.info {
+    background: rgba(68, 153, 213, 0.1);
+    border-color: rgba(68, 153, 213, 0.3);
+    color: var(--main-blue);
+}
+
+/* 数据总线装饰线 */
+.bus-line {
+    position: relative;
+    height: 2px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--main-blue) 0px,
+        var(--main-blue) 4px,
+        transparent 4px,
+        transparent 8px
+    );
+    opacity: 0.2;
+    margin: 20px 0;
+}
+
+.bus-line::after {
+    content: attr(data-width);
+    position: absolute;
+    right: 0;
+    top: -18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--main-blue);
+    opacity: 0.5;
+}
+
+/* PCB 丝印文字 */
+.pcb-silkscreen {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    opacity: 0.3;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* 晶振装饰 */
+.crystal-oscillator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+.crystal-oscillator::before {
+    content: '◇';
+    color: var(--main-blue);
+}
+
+/* 电源轨指示器 */
+.power-rail {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--led-red);
+    opacity: 0.6;
+}
+
+.power-rail::before {
+    content: '⏚';
+    color: var(--led-red);
+}
+
+/* 嵌入式风格卡片角标 */
+.corner-markers {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.corner-markers::before,
+.corner-markers::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: var(--main-blue);
+    border-style: solid;
+    opacity: 0.3;
+}
+
+.corner-markers::before {
+    top: 4px;
+    left: 4px;
+    border-width: 2px 0 0 2px;
+}
+
+.corner-markers::after {
+    bottom: 4px;
+    right: 4px;
+    border-width: 0 2px 2px 0;
+}
+
+/* 串口通信动画 */
+@keyframes serialTx {
+    0% { transform: translateX(0); opacity: 1; }
+    100% { transform: translateX(20px); opacity: 0; }
+}
+
+@keyframes serialRx {
+    0% { transform: translateX(0); opacity: 1; }
+    100% { transform: translateX(-20px); opacity: 0; }
+}
+
+.serial-indicator {
+    display: inline-flex;
+    gap: 3px;
+    align-items: center;
+}
+
+.serial-indicator .tx-dot,
+.serial-indicator .rx-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.serial-indicator .tx-dot {
+    background: var(--led-green);
+    animation: serialTx 0.8s ease-out infinite;
+}
+
+.serial-indicator .rx-dot {
+    background: var(--main-blue);
+    animation: serialRx 0.8s ease-out infinite;
+}
+
+/* 波形进度条 */
+.wave-progress {
+    position: relative;
+    height: 20px;
+    background: rgba(68, 153, 213, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.wave-progress .wave-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--main-blue-dark), var(--main-blue), var(--main-blue-light));
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.wave-progress .wave-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2));
+    animation: waveGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes waveGlow {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+/* 网格坐标标记 */
+.grid-coords {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--main-blue);
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 嵌入式风格技能进度条 */
+.skill-progress {
+    position: relative;
+    height: 4px;
+    background: rgba(68, 153, 213, 0.1);
+    border-radius: 2px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.skill-progress .fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--main-blue-dark), var(--main-blue));
+    border-radius: 2px;
+    transition: width 1s ease;
+    position: relative;
+}
+
+.skill-progress .fill::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--main-blue-light);
+    box-shadow: 0 0 8px var(--main-blue);
+}
+
+/* 电路板风格区块装饰 */
+.circuit-corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+}
+
+.circuit-corner.tl {
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid var(--main-blue);
+    border-left: 2px solid var(--main-blue);
+    opacity: 0.4;
+}
+
+.circuit-corner.tr {
+    top: -1px;
+    right: -1px;
+    border-top: 2px solid var(--main-blue);
+    border-right: 2px solid var(--main-blue);
+    opacity: 0.4;
+}
+
+.circuit-corner.bl {
+    bottom: -1px;
+    left: -1px;
+    border-bottom: 2px solid var(--main-blue);
+    border-left: 2px solid var(--main-blue);
+    opacity: 0.4;
+}
+
+.circuit-corner.br {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 2px solid var(--main-blue);
+    border-right: 2px solid var(--main-blue);
+    opacity: 0.4;
+}
+
+/* 数据流文字动画 */
+@keyframes dataFlow {
+    0% { transform: translateX(100%); opacity: 0; }
+    10% { opacity: 0.15; }
+    90% { opacity: 0.15; }
+    100% { transform: translateX(-100%); opacity: 0; }
+}
+
+.data-stream {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--main-blue);
+    opacity: 0.08;
+    white-space: nowrap;
+    animation: dataFlow 15s linear infinite;
+}
+
+/* ========== PCB 全局风格增强 ========== */
+
+/* PCB 走线背景增强 */
+.pcb-traces-bg {
+    background-image: 
+        linear-gradient(0deg, transparent 49.7%, var(--pcb-trace) 49.7%, var(--pcb-trace) 50.3%, transparent 50.3%),
+        linear-gradient(90deg, transparent 49.7%, var(--pcb-trace) 49.7%, var(--pcb-trace) 50.3%, transparent 50.3%),
+        radial-gradient(circle at 25% 25%, rgba(68, 153, 213, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(242, 93, 142, 0.02) 0%, transparent 50%);
+    background-size: 80px 80px, 80px 80px, 100% 100%, 100% 100%;
+}
+
+/* 网格坐标样式 */
+.grid-coords {
+    position: fixed;
+    bottom: 12px;
+    right: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--main-blue);
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 100;
+    letter-spacing: 1px;
+    background: rgba(10, 10, 15, 0.5);
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(68, 153, 213, 0.1);
+}
+
+/* 笔记页面 PCB 背景 */
+.note-page .pcb-traces-bg {
+    opacity: 0.3;
+}
+
+/* 卡片 PCB 渐变背景 */
+.video-card,
+.blog-card,
+.platform-card,
+.note-card {
+    background: linear-gradient(135deg, rgba(13, 17, 23, 0.85), rgba(255, 255, 255, 0.02));
+}
+
+/* 视频缩略图底部装饰线 */
+.video-thumb {
+    position: relative;
+    overflow: hidden;
+}
+
+.video-thumb::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--main-blue), var(--accent-pink), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.video-card:hover .video-thumb::after {
+    opacity: 0.6;
+}
+
+/* 响应式 PCB 元素 */
+@media (max-width: 768px) {
+    .pcb-traces-bg {
+        background-size: 60px 60px, 60px 60px, 100% 100%, 100% 100%;
+    }
+    
+    .grid-coords {
+        display: none;
+    }
+}
+
+/* 嵌入式风格代码块 */
+pre {
+    position: relative;
+    background: linear-gradient(135deg, #0d1117, #161b22) !important;
+    border: 1px solid rgba(68, 153, 213, 0.15) !important;
+}
+
+pre::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--main-blue), transparent);
+    opacity: 0.3;
+}
+
+/* 代码标题 PCB 风格 */
+.code-title {
+    background: linear-gradient(135deg, #0d1117, #161b22) !important;
+    border-color: rgba(68, 153, 213, 0.15) !important;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* 侧边栏 PCB 风格 */
+.note-sidebar {
+    background: linear-gradient(180deg, rgba(13, 17, 23, 0.95), rgba(10, 10, 15, 0.9)) !important;
+    border: 1px solid rgba(68, 153, 213, 0.15) !important;
+}
+
+/* 文章卡片 PCB 风格 */
+.note-article {
+    background: linear-gradient(135deg, rgba(13, 17, 23, 0.9), rgba(255, 255, 255, 0.02)) !important;
+    border: 1px solid rgba(68, 153, 213, 0.15) !important;
+}
+
+/* 加载器 PCB 风格 */
+.page-loader {
+    background: linear-gradient(135deg, #0a0a0f, #0d1117) !important;
+}
+
+/* QQ 群 PCB 风格 */
+.qq-group {
+    background: linear-gradient(135deg, rgba(13, 17, 23, 0.8), rgba(68, 153, 213, 0.05)) !important;
+    border: 1px solid rgba(68, 153, 213, 0.15) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.qq-group::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--main-blue), var(--accent-pink), transparent);
+    opacity: 0.4;
+}
+
+/* 页脚 PCB 风格 */
+footer {
+    background: linear-gradient(180deg, rgba(10, 10, 15, 0.9), rgba(13, 17, 23, 0.95)) !important;
+    border-top: 1px solid rgba(68, 153, 213, 0.15) !important;
+    position: relative;
+}
+
+footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--main-blue), transparent);
+    opacity: 0.3;
+}
+
+/* 导航栏 PCB 风格 */
+nav {
+    border-bottom: 1px solid rgba(68, 153, 213, 0.15) !important;
+    background: linear-gradient(180deg, rgba(13, 17, 23, 0.95), rgba(10, 10, 15, 0.9)) !important;
+}
+
+/* 英雄区 PCB 装饰线 */
+.hero {
+    position: relative;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--main-blue), transparent);
+    opacity: 0.2;
+}
+
+/* 分区标题 PCB 风格 */
+.section-title {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.section-title::after {
+    content: '';
+    display: inline-block;
+    width: 30px;
+    height: 1px;
+    background: var(--main-blue);
+    opacity: 0.4;
+}
+
+/* 嵌入式风格标签 */
+.blog-tag {
+    background: rgba(13, 17, 23, 0.8) !important;
+    border: 1px solid rgba(68, 153, 213, 0.2) !important;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+}
+
+/* 视频标签/徽章 PCB 风格 */
+.video-tag,
+.video-badge {
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+}
+
+/* 元数据标签 PCB 风格 */
+.meta-tag {
+    background: rgba(13, 17, 23, 0.8) !important;
+    border: 1px solid rgba(68, 153, 213, 0.15) !important;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* 搜索框 PCB 风格 */
+.search-input {
+    background: rgba(13, 17, 23, 0.8) !important;
+    border: 1px solid rgba(68, 153, 213, 0.15) !important;
+}
+
+/* 菜单链接 PCB 风格 */
+.menu-link:hover {
+    background: rgba(13, 17, 23, 0.8) !important;
+}
+
+.menu-link.active {
+    background: rgba(13, 17, 23, 0.9) !important;
+    border-color: rgba(68, 153, 213, 0.3) !important;
+}
+
+/* 子菜单 PCB 风格 */
+.submenu {
+    border-left-color: rgba(68, 153, 213, 0.15) !important;
+}
+
+/* 回到顶部 PCB 风格 */
+.back-to-top {
+    background: rgba(13, 17, 23, 0.9) !important;
+    border: 1px solid rgba(68, 153, 213, 0.2) !important;
+}
+
+/* Toast PCB 风格 */
+.toast-notification {
+    background: linear-gradient(135deg, rgba(13, 17, 23, 0.95), rgba(68, 153, 213, 0.2)) !important;
+    border: 1px solid rgba(68, 153, 213, 0.3) !important;
+}
+
+/* 滚动条 PCB 风格 */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(13, 17, 23, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--main-blue-dark), var(--main-blue));
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--main-blue), var(--main-blue-light));
+}
+
+/* 统计数字 LED 间距 */
+.stat-number .led-indicator {
+    margin-right: 6px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+}
+
+/* 数据流文字位置修正 */
+.note-card .data-stream {
+    top: 12px;
+    left: 0;
+}
+
+/* 角标位置修正 */
+.corner-markers {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
 }

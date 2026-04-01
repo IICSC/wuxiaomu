@@ -19,6 +19,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/fontawesome.min.css">
     
     <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
@@ -27,9 +28,17 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>木</text></svg>">
 </head>
 <body>
+    <!-- 页面加载动画 -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-ring" style="position:relative;"></div>
+        <div class="loader-text">Loading</div>
+    </div>
+
     <!-- 背景 -->
     <div class="grid-bg"></div>
     <div class="bg-animation"></div>
+    <div class="pcb-traces-bg"></div>
+    <div class="grid-coords" id="gridCoords">X:0000 Y:0000</div>
 
     <!-- 导航 -->
     <nav>
@@ -67,35 +76,35 @@
             
             <div class="stats-container">
                 <div class="stat-item">
-                    <div class="stat-number" id="fans-count">7500+</div>
+                    <div class="stat-number" id="fans-count"><span class="led-indicator green"></span>7500+</div>
                     <div class="stat-label">B站粉丝</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number" id="video-count">30+</div>
+                    <div class="stat-number" id="video-count"><span class="led-indicator blue"></span>30+</div>
                     <div class="stat-label">教学视频</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number" id="blog-count">100+</div>
+                    <div class="stat-number" id="blog-count"><span class="led-indicator green"></span>100+</div>
                     <div class="stat-label">技术文章</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">3</div>
+                    <div class="stat-number"><span class="led-indicator yellow"></span>3</div>
                     <div class="stat-label">交流群</div>
                 </div>
             </div>
 
             <div class="social-container">
                 <a href="https://space.bilibili.com/323611141/" target="_blank" class="social-btn bilibili" title="哔哩哔哩">
-                    <span>📺</span>
+                    <span><i class="fa-brands fa-bilibili"></i></span>
                 </a>
                 <a href="https://blog.csdn.net/WuXiaoMuDeBug" target="_blank" class="social-btn csdn" title="CSDN">
-                    <span>💻</span>
+                    <span><i class="fa-solid fa-code"></i></span>
                 </a>
                 <a href="https://www.cnblogs.com/foge/" target="_blank" class="social-btn cnblogs" title="博客园">
-                    <span>📝</span>
+                    <span><i class="fa-solid fa-pen-nib"></i></span>
                 </a>
                 <a href="https://www.douyin.com/user/MS4wLjABAAAALEnmF2GGAYyG241RkQlxVYPIUaqX7uW7qYCUXVyyV_g" target="_blank" class="social-btn douyin" title="抖音">
-                    <span>🎵</span>
+                    <span><i class="fa-brands fa-tiktok"></i></span>
                 </a>
             </div>
         </div>
@@ -110,52 +119,76 @@
         
         <div class="skills-grid">
             <div class="skill-card">
-                <span class="skill-icon">🔲</span>
+                <div class="corner-markers"></div>
+                <span class="skill-icon"><i class="fa-solid fa-microchip"></i></span>
                 <div class="skill-name">51单片机</div>
+                <div class="skill-progress"><div class="fill" style="width: 90%"></div></div>
             </div>
             <div class="skill-card">
-                <span class="skill-icon">⚡</span>
+                <div class="corner-markers"></div>
+                <span class="skill-icon"><i class="fa-solid fa-bolt"></i></span>
                 <div class="skill-name">STM32</div>
+                <div class="skill-progress"><div class="fill" style="width: 95%"></div></div>
             </div>
             <div class="skill-card">
-                <span class="skill-icon">📡</span>
+                <div class="corner-markers"></div>
+                <span class="skill-icon"><i class="fa-solid fa-wifi"></i></span>
                 <div class="skill-name">ESP32</div>
+                <div class="skill-progress"><div class="fill" style="width: 85%"></div></div>
             </div>
             <div class="skill-card">
-                <span class="skill-icon">🔌</span>
+                <div class="corner-markers"></div>
+                <span class="skill-icon"><i class="fa-solid fa-terminal"></i></span>
                 <div class="skill-name">串口通信</div>
+                <div class="skill-progress"><div class="fill" style="width: 92%"></div></div>
             </div>
             <div class="skill-card">
-                <span class="skill-icon">📱</span>
+                <div class="corner-markers"></div>
+                <span class="skill-icon"><i class="fa-solid fa-network-wired"></i></span>
                 <div class="skill-name">I2C / SPI</div>
+                <div class="skill-progress"><div class="fill" style="width: 88%"></div></div>
             </div>
             <div class="skill-card">
-                <span class="skill-icon">🖥️</span>
+                <div class="corner-markers"></div>
+                <span class="skill-icon"><i class="fa-solid fa-desktop"></i></span>
                 <div class="skill-name">OLED显示</div>
+                <div class="skill-progress"><div class="fill" style="width: 85%"></div></div>
             </div>
             <div class="skill-card">
-                <span class="skill-icon">👁️</span>
+                <div class="corner-markers"></div>
+                <span class="skill-icon"><i class="fa-solid fa-eye"></i></span>
                 <div class="skill-name">OpenMV视觉</div>
+                <div class="skill-progress"><div class="fill" style="width: 75%"></div></div>
             </div>
             <div class="skill-card">
-                <span class="skill-icon">📶</span>
+                <div class="corner-markers"></div>
+                <span class="skill-icon"><i class="fa-solid fa-tower-broadcast"></i></span>
                 <div class="skill-name">NRF24L01</div>
+                <div class="skill-progress"><div class="fill" style="width: 80%"></div></div>
             </div>
             <div class="skill-card">
-                <span class="skill-icon">📦</span>
+                <div class="corner-markers"></div>
+                <span class="skill-icon"><i class="fa-solid fa-box-open"></i></span>
                 <div class="skill-name">传感器</div>
+                <div class="skill-progress"><div class="fill" style="width: 82%"></div></div>
             </div>
             <div class="skill-card">
-                <span class="skill-icon">⏱️</span>
+                <div class="corner-markers"></div>
+                <span class="skill-icon"><i class="fa-solid fa-clock"></i></span>
                 <div class="skill-name">中断定时</div>
+                <div class="skill-progress"><div class="fill" style="width: 90%"></div></div>
             </div>
             <div class="skill-card">
-                <span class="skill-icon">🔢</span>
+                <div class="corner-markers"></div>
+                <span class="skill-icon"><i class="fa-solid fa-list-ol"></i></span>
                 <div class="skill-name">数码管</div>
+                <div class="skill-progress"><div class="fill" style="width: 78%"></div></div>
             </div>
             <div class="skill-card">
-                <span class="skill-icon">💻</span>
+                <div class="corner-markers"></div>
+                <span class="skill-icon"><i class="fa-solid fa-keyboard"></i></span>
                 <div class="skill-name">易语言</div>
+                <div class="skill-progress"><div class="fill" style="width: 70%"></div></div>
             </div>
         </div>
     </section>
@@ -168,102 +201,109 @@
         </div>
         
         <div class="video-grid">
-            <div class="video-card">
+            <a href="https://www.bilibili.com/video/BV1kw4m1K7uA/" target="_blank" class="video-card">
                 <div class="video-thumb">
-                    <span class="video-thumb-icon">🎬</span>
+                    <span class="video-thumb-icon"><i class="fa-solid fa-film"></i></span>
                     <span class="video-duration">05:15</span>
-                    <button class="video-play-btn" onclick="window.open('https://www.bilibili.com/video/BV1kw4m1K7uA/','_blank')">▶</button>
+                    <span class="video-badge hot">热门</span>
+                    <div class="video-play-btn"><i class="fa-solid fa-play"></i></div>
                 </div>
                 <div class="video-content">
                     <h3 class="video-title">51单片机入门教程 Keil uVision5</h3>
                     <div class="video-meta">
                         <div class="video-stats">
-                            <span class="video-stat">👁️ 5212</span>
-                            <span class="video-stat">❤️ 5</span>
+                            <span class="video-stat"><i class="fa-solid fa-eye"></i> 5212</span>
+                            <span class="video-stat"><i class="fa-solid fa-heart"></i> 5</span>
                         </div>
+                        <span class="video-tag beginner">入门</span>
                     </div>
                 </div>
-            </div>
+            </a>
 
-            <div class="video-card">
+            <a href="https://www.bilibili.com/video/BV1gM4y1P7sR/" target="_blank" class="video-card">
                 <div class="video-thumb">
-                    <span class="video-thumb-icon">🔧</span>
+                    <span class="video-thumb-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span>
                     <span class="video-duration">10:41</span>
-                    <button class="video-play-btn">▶</button>
+                    <div class="video-play-btn"><i class="fa-solid fa-play"></i></div>
                 </div>
                 <div class="video-content">
                     <h3 class="video-title">单片机最符合头文件的一集</h3>
                     <div class="video-meta">
                         <div class="video-stats">
-                            <span class="video-stat">👁️ 887</span>
+                            <span class="video-stat"><i class="fa-solid fa-eye"></i> 887</span>
                         </div>
+                        <span class="video-tag intermediate">进阶</span>
                     </div>
                 </div>
-            </div>
+            </a>
 
-            <div class="video-card">
+            <a href="https://www.bilibili.com/video/BV1XN4y1q7vN/" target="_blank" class="video-card">
                 <div class="video-thumb">
-                    <span class="video-thumb-icon">🔬</span>
+                    <span class="video-thumb-icon"><i class="fa-solid fa-microscope"></i></span>
                     <span class="video-duration">02:46</span>
-                    <button class="video-play-btn">▶</button>
+                    <div class="video-play-btn"><i class="fa-solid fa-play"></i></div>
                 </div>
                 <div class="video-content">
                     <h3 class="video-title">MPU6050国产芯片移植DMP库自检不通过</h3>
                     <div class="video-meta">
                         <div class="video-stats">
-                            <span class="video-stat">👁️ 459</span>
+                            <span class="video-stat"><i class="fa-solid fa-eye"></i> 459</span>
                         </div>
+                        <span class="video-tag advanced">高级</span>
                     </div>
                 </div>
-            </div>
+            </a>
 
-            <div class="video-card">
+            <a href="https://www.bilibili.com/video/BV1Yh4y1E7fN/" target="_blank" class="video-card">
                 <div class="video-thumb">
-                    <span class="video-thumb-icon">👁️</span>
+                    <span class="video-thumb-icon"><i class="fa-solid fa-eye"></i></span>
                     <span class="video-duration">04:21</span>
-                    <button class="video-play-btn">▶</button>
+                    <div class="video-play-btn"><i class="fa-solid fa-play"></i></div>
                 </div>
                 <div class="video-content">
                     <h3 class="video-title">电赛矩形识别激光点视觉训练</h3>
                     <div class="video-meta">
                         <div class="video-stats">
-                            <span class="video-stat">👁️ 413</span>
+                            <span class="video-stat"><i class="fa-solid fa-eye"></i> 413</span>
                         </div>
+                        <span class="video-tag intermediate">进阶</span>
                     </div>
                 </div>
-            </div>
+            </a>
 
-            <div class="video-card">
+            <a href="https://www.bilibili.com/video/BV1rM411Z7VK/" target="_blank" class="video-card">
                 <div class="video-thumb">
-                    <span class="video-thumb-icon">📡</span>
+                    <span class="video-thumb-icon"><i class="fa-solid fa-satellite-dish"></i></span>
                     <span class="video-duration">04:21</span>
-                    <button class="video-play-btn">▶</button>
+                    <div class="video-play-btn"><i class="fa-solid fa-play"></i></div>
                 </div>
                 <div class="video-content">
                     <h3 class="video-title">天问Block ASR-PRO核心板串口下载烧录</h3>
                     <div class="video-meta">
                         <div class="video-stats">
-                            <span class="video-stat">👁️ 353</span>
+                            <span class="video-stat"><i class="fa-solid fa-eye"></i> 353</span>
                         </div>
+                        <span class="video-tag beginner">入门</span>
                     </div>
                 </div>
-            </div>
+            </a>
 
-            <div class="video-card">
+            <a href="https://www.bilibili.com/video/BV1Jk4y1E7bN/" target="_blank" class="video-card">
                 <div class="video-thumb">
-                    <span class="video-thumb-icon">🔌</span>
+                    <span class="video-thumb-icon"><i class="fa-solid fa-plug"></i></span>
                     <span class="video-duration">10:04</span>
-                    <button class="video-play-btn">▶</button>
+                    <div class="video-play-btn"><i class="fa-solid fa-play"></i></div>
                 </div>
                 <div class="video-content">
                     <h3 class="video-title">STM32 HAL库软件I2C转硬件I2C驱动OLED</h3>
                     <div class="video-meta">
                         <div class="video-stats">
-                            <span class="video-stat">👁️ 370</span>
+                            <span class="video-stat"><i class="fa-solid fa-eye"></i> 370</span>
                         </div>
+                        <span class="video-tag intermediate">进阶</span>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </section>
 
@@ -337,6 +377,52 @@
         </div>
     </section>
 
+    <!-- 个人知识库 -->
+    <section class="section" id="notes">
+        <div class="section-header">
+            <h2 class="section-title">个人知识库</h2>
+            <p class="section-subtitle">技术分享 · 学习笔记 · 学校课程</p>
+        </div>
+        <div class="notes-grid">
+            <!-- 嵌入式笔记 -->
+            <div class="note-card">
+                <div class="corner-markers"></div>
+                <div class="data-stream">0x4499D5 0xF25D8E STM32F103C8T6 ESP32-S3 ATMEGA328P</div>
+                <div class="note-icon">MCU</div>
+                <h3 class="note-card-title">嵌入式学习笔记</h3>
+                <p class="note-card-desc">包含 STM32、ESP32、51单片机等硬件开发笔记与实战经验。</p>
+                <div class="note-links">
+                    <a href="notes/esp32_notes.html" class="note-card-link">ESP32 笔记</a>
+                    <a href="notes/learning_notes.html" class="note-card-link">更多笔记</a>
+                </div>
+            </div>
+
+            <!-- 学习笔记 -->
+            <div class="note-card">
+                <div class="corner-markers"></div>
+                <div class="data-stream">UART I2C SPI CAN USART DMA ADC PWM GPIO EXTI</div>
+                <div class="note-icon">EDU</div>
+                <h3 class="note-card-title">学习笔记</h3>
+                <p class="note-card-desc">记录嵌入式开发中的学习点滴，包含 ESP8266 AT 指令等实用笔记。</p>
+                <div class="note-links">
+                    <a href="notes/learning_notes.html" class="note-card-link">查看完整笔记</a>
+                </div>
+            </div>
+
+            <!-- 项目设计 -->
+            <div class="note-card">
+                <div class="corner-markers"></div>
+                <div class="data-stream">FreeRTOS PID RTOS BALANCE CAR SMART HOME REMOTE</div>
+                <div class="note-icon">PRJ</div>
+                <h3 class="note-card-title">项目实战</h3>
+                <p class="note-card-desc">平衡车、智能家居、遥控器等开源项目的设计思路与源码解析。</p>
+                <div class="note-links">
+                    <a href="notes/projects.html" class="note-card-link">查看开源项目</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- 平台分布 -->
     <section class="section" id="contact">
         <div class="section-header">
@@ -346,45 +432,51 @@
         
         <div class="platforms-grid">
             <a href="https://space.bilibili.com/323611141/" target="_blank" class="platform-card">
-                <span class="platform-icon">📺</span>
+                <span class="platform-icon"><i class="fa-brands fa-bilibili"></i></span>
                 <div class="platform-name">哔哩哔哩</div>
                 <div class="platform-desc">主要视频平台<br>嵌入式开发教程</div>
             </a>
             
             <a href="https://blog.csdn.net/WuXiaoMuDeBug" target="_blank" class="platform-card">
-                <span class="platform-icon">💻</span>
+                <span class="platform-icon"><i class="fa-solid fa-code"></i></span>
                 <div class="platform-name">CSDN</div>
                 <div class="platform-desc">博客专家认证<br>100+技术文章</div>
             </a>
             
             <a href="https://www.cnblogs.com/foge/" target="_blank" class="platform-card">
-                <span class="platform-icon">📝</span>
+                <span class="platform-icon"><i class="fa-solid fa-pen-nib"></i></span>
                 <div class="platform-name">博客园</div>
                 <div class="platform-desc">技术文章备份<br>代码分享</div>
             </a>
             
             <a href="https://www.douyin.com/user/MS4wLjABAAAALEnmF2GGAYyG241RkQlxVYPIUaqX7uW7qYCUXVyyV_g" target="_blank" class="platform-card">
-                <span class="platform-icon">🎵</span>
+                <span class="platform-icon"><i class="fa-brands fa-tiktok"></i></span>
                 <div class="platform-name">抖音</div>
                 <div class="platform-desc">短视频内容<br>日常分享</div>
             </a>
             
-            <a href="https://www.ixigua.com/home/62540908879" target="_blank" class="platform-card">
-                <span class="platform-icon">🍉</span>
-                <div class="platform-name">西瓜视频</div>
-                <div class="platform-desc">视频同步分发</div>
+            <a href="https://gitee.com/snqx-lqh" target="_blank" class="platform-card">
+                <span class="platform-icon"><i class="fa-brands fa-github"></i></span>
+                <div class="platform-name">Gitee</div>
+                <div class="platform-desc">国内代码托管<br>项目镜像同步</div>
             </a>
             
-            <a href="https://www.toutiao.com/c/user/token/MS4wLjABAAAAzo_0slN0-XW_voaGFjFH6HxDo58Tpm1sOfWSIJcPGd8/" target="_blank" class="platform-card">
-                <span class="platform-icon">📰</span>
-                <div class="platform-name">今日头条</div>
-                <div class="platform-desc">图文内容发布</div>
+            <a href="https://github.com/snqx-lqh/wiki" target="_blank" class="platform-card">
+                <span class="platform-icon"><i class="fa-solid fa-book-open"></i></span>
+                <div class="platform-name">Wiki 项目</div>
+                <div class="platform-desc">MkDocs 搭建<br>全站源码开源</div>
+            </a>
+            
+            <a href="mailto:2096940289@qq.com" class="platform-card">
+                <span class="platform-icon"><i class="fa-solid fa-envelope"></i></span>
+                <div class="platform-name">电子邮箱</div>
+                <div class="platform-desc">liqinghuaxx@163.com<br>欢迎技术交流</div>
             </a>
         </div>
 
         <!-- QQ群 -->
         <div class="qq-group">
-            <h3>📚 加入学习交流群</h3>
+            <h3><i class="fa-solid fa-users-rectangle"></i> 加入学习交流群</h3>
             <div class="qq-list">
                 <div class="qq-item" onclick="copyQQ('994035508')">
                     <div class="qq-number">994035508</div>

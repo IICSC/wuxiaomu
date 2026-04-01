@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习笔记 | 雾削木的个人知识库</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/fontawesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* 侧边栏与内容区域优化 */
+        .progress-container {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            z-index: 1001;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--main-blue), var(--accent-pink));
+            width: 0%;
+            box-shadow: 0 0 10px var(--main-blue);
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: rgba(68, 153, 213, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .back-to-top:hover {
+            background: var(--main-blue);
+            transform: translateY(-5px);
+            box-shadow: var(--glow-blue);
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .search-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 15px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+        .search-input:focus {
+            border-color: var(--main-blue);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .note-sidebar {
+            position: sticky;
+            top: 100px;
+            height: calc(100vh - 150px);
+            overflow-y: auto;
+            padding-right: 15px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--main-blue) transparent;
+        }
+        .note-sidebar::-webkit-scrollbar { width: 4px; }
+        .note-sidebar::-webkit-scrollbar-thumb { background: var(--main-blue); border-radius: 10px; }
+        
+        .sidebar-menu { list-style: none; }
+        .menu-item { margin-bottom: 5px; }
+        .menu-link {
+            display: block;
+            padding: 10px 15px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            border: 1px solid transparent;
+        }
+        .menu-link:hover {
+            background: rgba(68, 153, 213, 0.1);
+            color: var(--main-blue);
+        }
+        .menu-link.active {
+            background: rgba(68, 153, 213, 0.15);
+            color: var(--main-blue);
+            border-color: var(--border-color);
+            font-weight: 600;
+        }
+
+        .submenu { 
+            list-style: none; 
+            padding-left: 20px; 
+            margin-top: 5px;
+            display: none; 
+            border-left: 1px solid var(--border-color);
+            margin-left: 15px;
+        }
+        .menu-item.has-submenu.open > .submenu { display: block; }
+        .submenu .menu-link { font-size: 0.85rem; padding: 6px 15px; opacity: 0.8; }
+        
+        /* 文章内容样式 */
+        .note-main { max-width: 900px; }
+        section { scroll-margin-top: 100px; margin-bottom: 60px; }
+        .section-header { margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .note-article { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            border-radius: 20px; 
+            padding: 30px; 
+            margin-bottom: 30px;
+            transition: transform 0.3s;
+        }
+        .note-article:hover { transform: translateY(-5px); }
+        .note-article h3 { color: var(--main-blue-light); margin-bottom: 15px; font-size: 1.3rem; }
+        .note-article p { margin-bottom: 15px; color: #ccc; }
+        .note-article ul { margin-bottom: 15px; padding-left: 20px; color: #ccc; }
+        
+        /* 代码块优化 */
+        .article-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 0.8rem;
+        }
+        .meta-tag {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-secondary);
+        }
+        .meta-tag i { color: var(--main-blue); font-size: 0.7rem; }
+        .difficulty-easy { color: #4caf50 !important; }
+        .difficulty-medium { color: #ff9800 !important; }
+        .difficulty-hard { color: #f44336 !important; }
+
+        .code-container { position: relative; margin: 20px 0; }
+        .code-title { 
+            background: rgba(30, 30, 35, 0.8); 
+            padding: 8px 15px; 
+            border-radius: 12px 12px 0 0; 
+            font-size: 0.8rem; 
+            color: #888; 
+            border: 1px solid var(--border-color); 
+            border-bottom: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .copy-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: #888;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.3s;
+        }
+        .copy-btn:hover { background: var(--main-blue); color: white; border-color: var(--main-blue); }
+        
+        pre { 
+            margin: 0 !important; 
+            border-top-left-radius: 0 !important; 
+            border-top-right-radius: 0 !important; 
+            background: #1e1e1e !important;
+            padding: 20px !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 0 0 12px 12px !important;
+        }
+        code { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+    </style>
+</head>
+<body class="note-page">
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-ring" style="position:relative;"></div>
+        <div class="loader-text">Loading</div>
+    </div>
+
+    <div class="grid-bg"></div>
+    <div class="bg-animation"></div>
+    <div class="pcb-traces-bg"></div>
+    <div class="grid-coords" id="gridCoords">X:0000 Y:0000</div>
+
+    <!-- 进度条 -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav style="position: fixed; top: 0; left: 0; right: 0; height: 70px; background: rgba(10, 10, 15, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; z-index: 1000;">
+        <div class="logo" style="display: flex; align-items: center; gap: 12px;">
+            <div class="logo-icon" style="width: 40px; height: 40px; border-radius: 10px; background: url('https://i1.hdslb.com/bfs/face/cb0e2d1024deee2b0e360cf0acbb15b07436ee4d.jpg') center/cover no-repeat; box-shadow: var(--glow-blue);"></div>
+            <span class="logo-text" style="font-size: 1.4rem; font-weight: 700; background: linear-gradient(90deg, var(--main-blue-light), var(--text-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">雾削木</span>
+        </div>
+        <div class="nav-items" style="display: flex; gap: 8px;">
+            <a href="../index.html" class="nav-item">返回主页</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- 侧边栏导航 -->
+        <aside class="note-sidebar">
+            <div class="sidebar-title">全栈开发知识库</div>
+            
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="搜索笔记..." id="searchInput">
+            </div>
+
+            <ul class="sidebar-menu">
+                <li class="menu-item has-submenu open">
+                    <a href="#stm32hal" class="menu-link"><i class="fa-solid fa-microchip"></i> STM32HAL 库记录</a>
+                    <ul class="submenu">
+                        <li><a href="#hal-00" class="menu-link">00. 新建工程与 GPIO</a></li>
+                        <li><a href="#hal-01" class="menu-link">01. 按键输入配置</a></li>
+                        <li><a href="#hal-02" class="menu-link">02. 外部中断实现</a></li>
+                        <li><a href="#hal-03" class="menu-link">03. 定时器中断</a></li>
+                        <li><a href="#hal-04" class="menu-link">04. 串口基础收发</a></li>
+                        <li><a href="#hal-05" class="menu-link">05. PWM 输出控制</a></li>
+                        <li><a href="#hal-06" class="menu-link">06. ADC 采样(DMA)</a></li>
+                        <li><a href="#hal-07" class="menu-link">07. I2C 通信(OLED)</a></li>
+                        <li><a href="#hal-08" class="menu-link">08. SPI 通信(Flash)</a></li>
+                        <li><a href="#hal-09" class="menu-link">09. DMA 直接存储访问</a></li>
+                        <li><a href="#hal-10" class="menu-link">10. 输入捕获(频率测量)</a></li>
+                        <li><a href="#hal-11" class="menu-link">11. 编码器模式(电机)</a></li>
+                        <li><a href="#hal-12" class="menu-link">12. RTC 实时时钟</a></li>
+                        <li><a href="#hal-13" class="menu-link">13. 看门狗(IWDG/WWDG)</a></li>
+                        <li><a href="#hal-14" class="menu-link">14. CAN 总线通信</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item"><a href="#stm32std" class="menu-link"><i class="fa-solid fa-code"></i> STM32 标准库开发</a></li>
+                <li class="menu-item"><a href="#iap" class="menu-link"><i class="fa-solid fa-upload"></i> STM32 IAP 升级</a></li>
+                <li class="menu-item has-submenu">
+                    <a href="#linux-driver" class="menu-link"><i class="fa-brands fa-linux"></i> Linux 驱动开发篇</a>
+                    <ul class="submenu">
+                        <li><a href="#linux-led" class="menu-link">LED 驱动(设备树)</a></li>
+                        <li><a href="#linux-beep" class="menu-link">蜂鸣器驱动</a></li>
+                        <li><a href="#linux-key" class="menu-link">按键中断驱动</a></li>
+                        <li><a href="#linux-concur" class="menu-link">并发与竞争(原子自旋)</a></li>
+                        <li><a href="#linux-i2c" class="menu-link">I2C 驱动(AP3216C)</a></li>
+                        <li><a href="#linux-spi" class="menu-link">SPI 驱动(ICM20608)</a></li>
+                        <li><a href="#linux-platform" class="menu-link">Platform 平台驱动</a></li>
+                        <li><a href="#linux-pinctrl" class="menu-link">Pinctrl 与 GPIO 子系统</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item"><a href="#fpga" class="menu-link"><i class="fa-solid fa-layer-group"></i> FPGA 基础</a></li>
+                <li class="menu-item"><a href="#modules" class="menu-link"><i class="fa-solid fa-puzzle-piece"></i> 模块学习</a>
+                    <ul class="submenu">
+                        <li><a href="#mod-mpu6050" class="menu-link">MPU6050 (DMP)</a></li>
+                        <li><a href="#mod-oled" class="menu-link">OLED 菜单 UI 设计</a></li>
+                        <li><a href="#mod-nrf24" class="menu-link">NRF24L01 无线通信</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item"><a href="#misc" class="menu-link"><i class="fa-solid fa-book-open"></i> 编程杂记</a></li>
+            </ul>
+
+            <div class="sidebar-title" style="margin-top: 30px;"><i class="fa-solid fa-toolbox"></i> 开发者工具箱</div>
+            <ul class="sidebar-menu">
+                <li class="menu-item"><a href="https://stm32.pinout.xyz/" target="_blank" class="menu-link"><i class="fa-solid fa-microchip"></i> STM32 Pinout Online</a></li>
+                <li class="menu-item"><a href="https://cubemx.online/" target="_blank" class="menu-link"><i class="fa-solid fa-cube"></i> CubeMX 在线版</a></li>
+                <li class="menu-item"><a href="https://godbolt.org/" target="_blank" class="menu-link"><i class="fa-solid fa-code"></i> Compiler Explorer</a></li>
+                <li class="menu-item"><a href="https://www.raspberrypi.com/documentation/computers/raspberry-pi.html" target="_blank" class="menu-link"><i class="fa-solid fa-server"></i> Raspberry Pi Pinout</a></li>
+                <li class="menu-item"><a href="https://www.espressif.com/en/support/documents/technical-documents" target="_blank" class="menu-link"><i class="fa-solid fa-wifi"></i> ESP32 官方文档</a></li>
+                <li class="menu-item"><a href="https://developer.arm.com/documentation" target="_blank" class="menu-link"><i class="fa-solid fa-book"></i> ARM 官方文档</a></li>
+                <li class="menu-item"><a href="https://www.kernel.org/doc/html/latest/" target="_blank" class="menu-link"><i class="fa-brands fa-linux"></i> Linux Kernel Docs</a></li>
+                <li class="menu-item"><a href="https://en.cppreference.com/w/" target="_blank" class="menu-link"><i class="fa-solid fa-book-open"></i> C/C++ Reference</a></li>
+                <li class="menu-item"><a href="https://regex101.com/" target="_blank" class="menu-link"><i class="fa-solid fa-spell-check"></i> Regex 在线测试</a></li>
+                <li class="menu-item"><a href="https://www.json.cn/" target="_blank" class="menu-link"><i class="fa-solid fa-code-branch"></i> JSON 格式化</a></li>
+                <li class="menu-item"><a href="https://crontab.guru/" target="_blank" class="menu-link"><i class="fa-solid fa-clock"></i> Crontab 生成器</a></li>
+                <li class="menu-item"><a href="https://www.base64encode.org/" target="_blank" class="menu-link"><i class="fa-solid fa-lock"></i> Base64 编解码</a></li>
+            </ul>
+        </aside>
+
+        <!-- 主内容区域 -->
+        <main class="note-main">
+            <header class="note-header">
+                <h1>全栈学习笔记 (完整版)</h1>
+                <p class="subtitle">深度同步自 LQH's Wiki，涵盖嵌入式、Linux、FPGA 等全维度技术栈</p>
+            </header>
+
+            <!-- STM32HAL -->
+            <section id="stm32hal">
+                <div class="section-header"><h2 class="section-title">STM32HAL 库记录</h2></div>
+                
+                <div class="note-article" id="hal-00">
+                    <h3>00. 新建工程以及 GPIO 的输出配置</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-easy">入门</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 5 min</span>
+                        <span class="meta-tag"><i class="fa-solid fa-calendar-days"></i> 更新: 2024-03-20</span>
+                    </div>
+                    <p>在 CubeMX 的 SYS 选项中，<strong>DEBUG</strong> 必须选择 <strong>Serial Wire</strong>，否则下载一次后芯片可能被锁死。</p>
+                    <p><strong>GPIO 配置：</strong> 选择引脚 -> GPIO_Output -> Pull-up (视硬件而定)。</p>
+                    <pre><code>while(1) {
+    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_8); // 翻转 LED
+    HAL_Delay(500); // 延时 500ms
+}</code></pre>
+                </div>
+
+                <div class="note-article" id="hal-01">
+                    <h3>01. 按键输入配置</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-easy">入门</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 3 min</span>
+                    </div>
+                    <p><strong>CubeMX 配置：</strong> 选择引脚 -> GPIO_Input -> Pull-up (上拉输入，按键另一端接地)。</p>
+                    <pre><code>if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_RESET) {
+    HAL_Delay(20); // 消抖
+    if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_RESET) {
+        // 执行按键按下逻辑
+        while(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_RESET); // 等待松手
+    }
+}</code></pre>
+                </div>
+
+                <div class="note-article" id="hal-02">
+                    <h3>02. 外部中断实现</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-easy">入门</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 5 min</span>
+                    </div>
+                    <p><strong>CubeMX 配置：</strong> GPIO_EXTI -> NVIC 中使能对应的 EXTI line 中断 -> 选择 Falling Edge (下降沿触发)。</p>
+                    <p>在 <code>main.c</code> 或 <code>gpio.c</code> 中重写回调函数：</p>
+                    <pre><code>void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+    if (GPIO_Pin == GPIO_PIN_0) {
+        HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5); // 中断触发翻转 LED
+    }
+}</code></pre>
+                </div>
+
+                <div class="note-article" id="hal-03">
+                    <h3>03. 定时器中断</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-easy">入门</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 8 min</span>
+                    </div>
+                    <p><strong>CubeMX 配置：</strong> Timers -> TIMx -> Internal Clock -> 配置 PSC (预分频) 和 ARR (自动重装载)。</p>
+                    <p>公式：<code>Update Event (Hz) = Timer_Clock / ((PSC + 1) * (ARR + 1))</code></p>
+                    <pre><code>// 启动定时器中断
+HAL_TIM_Base_Start_IT(&htim2);
+
+// 定时器回调函数
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+    if (htim->Instance == TIM2) {
+        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_1);
+    }
+}</code></pre>
+                </div>
+
+                <div class="note-article" id="hal-04">
+                    <h3>04. 串口的基础收发</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-easy">入门</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 10 min</span>
+                    </div>
+                    <p><strong>CubeMX 配置：</strong> Connectivity -> USART1 -> Asynchronous -> NVIC 中使能中断。</p>
+                    <p><strong>中断接收并回显：</strong></p>
+                    <pre><code>uint8_t res;
+HAL_UART_Receive_IT(&huart1, &res, 1); // 初始开启
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+    if(huart->Instance == USART1) {
+        HAL_UART_Transmit(&huart1, &res, 1, 100); // 发送回去
+        HAL_UART_Receive_IT(&huart1, &res, 1); // 循环开启
+    }
+}</code></pre>
+                </div>
+
+                <div class="note-article" id="hal-05">
+                    <h3>05. PWM 输出控制</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-easy">入门</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 8 min</span>
+                    </div>
+                    <p><strong>CubeMX 配置：</strong> Timers -> TIMx -> Channel x -> PWM Generation CHx。配置 PSC 和 ARR 决定频率，Pulse 决定占空比。</p>
+                    <pre><code>// 开启 PWM
+HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+
+// 动态修改占空比
+__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 500); // Pulse = 500</code></pre>
+                </div>
+
+                <div class="note-article" id="hal-06">
+                    <h3>06. ADC 采样 (DMA 模式)</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 12 min</span>
+                    </div>
+                    <p><strong>CubeMX 配置：</strong> Analog -> ADCx -> 选择通道 -> DMA Settings -> Add ADCx_DMA -> Mode: Circular -> Data Width: Half Word。</p>
+                    <pre><code>uint32_t adc_val[10]; // 缓冲区
+
+// 启动 ADC DMA
+HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_val, 10);
+
+// ADC 采样完成回调
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
+    // 处理采样数据
+}</code></pre>
+                </div>
+
+                <div class="note-article" id="hal-07">
+                    <h3>07. I2C 通信 (以 OLED 为例)</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 10 min</span>
+                    </div>
+                    <p><strong>CubeMX 配置：</strong> Connectivity -> I2C1 -> Standard Mode -> 100KHz。</p>
+                    <pre><code>// 向 I2C 设备写入寄存器数据
+HAL_I2C_Mem_Write(&hi2c1, OLED_ADDR, 0x00, I2C_MEMADD_SIZE_8BIT, &cmd, 1, 100);
+HAL_I2C_Mem_Write(&hi2c1, OLED_ADDR, 0x40, I2C_MEMADD_SIZE_8BIT, &data, 1, 100);</code></pre>
+                </div>
+
+                <div class="note-article" id="hal-08">
+                    <h3>08. SPI 通信 (以 Flash W25Qxx 为例)</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 10 min</span>
+                    </div>
+                    <p><strong>CubeMX 配置：</strong> Connectivity -> SPI1 -> Full-Duplex Master -> 8 Bits -> MSB First。</p>
+                    <pre><code>// SPI 读写字节函数
+uint8_t SPI_ReadWriteByte(uint8_t tx_data) {
+    uint8_t rx_data;
+    HAL_SPI_TransmitReceive(&hspi1, &tx_data, &rx_data, 1, 100);
+    return rx_data;
+}</code></pre>
+                </div>
+
+                <div class="note-article" id="hal-09">
+                    <h3>09. DMA 直接存储访问</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 10 min</span>
+                    </div>
+                    <p><strong>Memory to Memory 模式：</strong></p>
+                    <pre><code>HAL_DMA_Start(&hdma_memtomem_dma1_channel1, (uint32_t)src_buf, (uint32_t)dst_buf, len);
+while(__HAL_DMA_GET_FLAG(&hdma_memtomem_dma1_channel1, DMA_FLAG_TC1) == RESET); // 等待传输完成</code></pre>
+                </div>
+
+                <div class="note-article" id="hal-10">
+                    <h3>10. 输入捕获 (测量频率与占空比)</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 15 min</span>
+                    </div>
+                    <p><strong>CubeMX 配置：</strong> Timers -> TIMx -> Channel x -> Input Capture Direct Mode -> 选择触发边沿。</p>
+                    <p>原理：通过捕获两次上升沿之间的计数值来计算信号周期。</p>
+                    <pre><code>// 输入捕获回调
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
+    if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) {
+        uint32_t capture = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+        // 计算频率: Freq = Timer_Clock / (PSC+1) / capture
+    }
+}
+// 启动输入捕获中断
+HAL_TIM_IC_Start_IT(&htim5, TIM_CHANNEL_1);</code></pre>
+                </div>
+
+                <div class="note-article" id="hal-11">
+                    <h3>11. 编码器模式 (读取电机转速)</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 12 min</span>
+                    </div>
+                    <p><strong>CubeMX 配置：</strong> Timers -> TIMx -> Combined Channels -> Encoder Mode -> 选择 Channel 1 & Channel 2。</p>
+                    <p>编码器模式自动对 A/B 相脉冲进行加减计数，CNT 寄存器即为当前位置。</p>
+                    <pre><code>// 启动编码器
+HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
+
+// 读取当前计数 (带符号)
+int16_t encoder_count = (int16_t)__HAL_TIM_GET_COUNTER(&htim3);
+
+// 定时清零 (防止溢出)
+__HAL_TIM_SET_COUNTER(&htim3, 0);</code></pre>
+                </div>
+
+                <div class="note-article" id="hal-12">
+                    <h3>12. RTC 实时时钟与闹钟唤醒</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 10 min</span>
+                    </div>
+                    <p><strong>CubeMX 配置：</strong> Timers -> RTC -> Activate Clock Source -> 选择 LSE (32.768kHz)。</p>
+                    <pre><code>// 读取当前时间
+RTC_TimeTypeDef time;
+HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN);
+HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
+
+// 注意：必须先读时间再读日期，否则影子寄存器会被重置</code></pre>
+                </div>
+
+                <div class="note-article" id="hal-13">
+                    <h3>13. 看门狗 (独立/窗口看门狗)</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 8 min</span>
+                    </div>
+                    <p><strong>独立看门狗 (IWDG)：</strong> 使用内部 LSI 时钟，不受系统时钟影响，适合检测程序跑飞。</p>
+                    <pre><code>// IWDG 初始化后启动
+HAL_IWDG_Start(&hiwdg);
+
+// 在关键循环中喂狗
+HAL_IWDG_Refresh(&hiwdg);</code></pre>
+                    <p><strong>窗口看门狗 (WWDG)：</strong> 必须在特定时间窗口内喂狗，过早或过晚都会复位，适合检测时序异常。</p>
+                </div>
+
+                <div class="note-article" id="hal-14">
+                    <h3>14. CAN 总线通信</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-hard">高级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 20 min</span>
+                    </div>
+                    <p><strong>CubeMX 配置：</strong> Connectivity -> CAN -> 配置波特率 (如 500Kbps) -> 使能 FIFO0 中断。</p>
+                    <pre><code>// CAN 发送
+CAN_TxHeaderTypeDef tx_header;
+tx_header.StdId = 0x321;
+tx_header.IDE = CAN_ID_STD;
+tx_header.DLC = 8;
+uint8_t data[8] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
+uint32_t tx_mailbox;
+HAL_CAN_AddTxMessage(&hcan, &tx_header, data, &tx_mailbox);
+
+// CAN 接收中断回调
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
+    CAN_RxHeaderTypeDef rx_header;
+    uint8_t rx_data[8];
+    HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_data);
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- STM32 标准库 -->
+            <section id="stm32std">
+                <div class="section-header"><h2 class="section-title">STM32 标准库开发</h2></div>
+                <div class="note-article">
+                    <h3>GPIO 输出配置</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-easy">入门</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 5 min</span>
+                    </div>
+                    <pre><code>void bsp_led_init() {
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE); // 开启时钟
+    GPIO_InitTypeDef GPIO_InitStruct;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_13;
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP; // 推挽输出
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOC, &GPIO_InitStruct);
+}</code></pre>
+                    <h3>引脚重映射 (JTAG 复用)</h3>
+                    <p>将 PB3/PB4/PA15 等 JTAG 引脚转为普通 IO 使用：</p>
+                    <pre><code>RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
+GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);</code></pre>
+                </div>
+            </section>
+
+            <!-- IAP 升级 -->
+            <section id="iap">
+                <div class="section-header"><h2 class="section-title">STM32 IAP 升级</h2></div>
+                <div class="note-article">
+                    <h3>IAP 原理与 Flash 分区</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-hard">高级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 15 min</span>
+                    </div>
+                    <p>IAP (In-Application Programming) 即在应用中编程。通常将 Flash 分为 BootLoader 区和 App 区：</p>
+                    <ul>
+                        <li><strong>BootLoader (0x0800 0000):</strong> 负责接收固件并写入 Flash。</li>
+                        <li><strong>App (0x0800 4000):</strong> 实际业务逻辑。</li>
+                    </ul>
+                    <p><strong>App 中断向量表偏移：</strong></p>
+                    <pre><code>SCB->VTOR = FLASH_BASE | 0x4000; // 在 App 的 main 函数开头设置</code></pre>
+                    <h3>跳转代码实现</h3>
+                    <pre><code>typedef void (*iapfun)(void);
+iapfun jump2app;
+void iap_load_app(uint32_t appaddr) {
+    // 1. 检查栈顶地址是否合法 (是否在 SRAM 范围内)
+    if(((*(volatile uint32_t*)appaddr)&0x2FFE0000) == 0x20000000) {
+        // 2. 获取复位中断向量 (App 起始地址 + 4)
+        jump2app = (iapfun)*(volatile uint32_t*)(appaddr + 4);
+        // 3. 设置主堆栈指针 (MSP)
+        __set_MSP(*(volatile uint32_t*)appaddr);
+        // 4. 跳转
+        jump2app();
+    }
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- IMX6ULL -->
+            <section id="imx6ull">
+                <div class="section-header"><h2 class="section-title">IMX6ULL 裸机开发</h2></div>
+                <div class="note-article">
+                    <h3>U-Boot 交互常用指令</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 8 min</span>
+                    </div>
+                    <pre><code>mmc dev 0          # 切换到 SD 卡
+mmc dev 1          # 切换到 EMMC
+loadx 0x87800000   # 使用 Xmode 传输 bin 文件
+go 0x87800000      # 运行裸机程序</code></pre>
+                </div>
+                <div class="note-article" id="imx6ull-gpio">
+                    <h3>IMX6ULL GPIO 寄存器操作</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 10 min</span>
+                    </div>
+                    <p>NXP IMX6ULL 的 GPIO 控制器包含 5 组 GPIO (GPIO1-GPIO5)，每组有多个引脚。</p>
+                    <h4>1. 关键寄存器</h4>
+                    <ul>
+                        <li><strong>DR (Data Register):</strong> 数据寄存器，读写引脚电平</li>
+                        <li><strong>GDIR (GPIO Direction Register):</strong> 方向寄存器，1=输出，0=输入</li>
+                        <li><strong>PSR (Pad Status Register):</strong> 引脚状态寄存器，读取实际电平</li>
+                        <li><strong>ICR1/ICR2 (Interrupt Config Register):</strong> 中断配置寄存器</li>
+                    </ul>
+                    <pre><code>// 配置 GPIO1_IO03 为输出
+*(volatile unsigned int *)0x0209C004 |= (1 << 3);  // GDIR 设置输出
+// 输出高电平
+*(volatile unsigned int *)0x0209C000 |= (1 << 3);  // DR 置高
+// 读取引脚状态
+unsigned int status = *(volatile unsigned int *)0x0209C00C & (1 << 3);</code></pre>
+                    <h4>2. IOMUX 引脚复用配置</h4>
+                    <p>IMX6ULL 引脚复用通过 IOMUXC 模块配置，每个引脚对应一个 SW_MUX_CTL 寄存器。</p>
+                    <pre><code>// 配置 UART1_CTS_B 为 GPIO1_IO18
+*(volatile unsigned int *)0x020E0068 = 0x5;  // MUX_MODE = 5 (GPIO)
+// 配置电气属性 (上拉、速度等)
+*(volatile unsigned int *)0x020E02F4 = 0x10B0;</code></pre>
+                </div>
+            </section>
+
+            <!-- Linux 驱动 -->
+            <section id="linux-driver">
+                <div class="section-header"><h2 class="section-title">Linux 驱动开发篇</h2></div>
+                
+                <div class="note-article" id="linux-led">
+                    <h3>LED 驱动 (基于设备树)</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 12 min</span>
+                    </div>
+                    <p>通过设备树 (Device Tree) 描述硬件资源，驱动程序通过 <code>of_</code> 系列函数获取资源。</p>
+                    <p><strong>1. 设备树节点 (dts)：</strong></p>
+                    <pre><code>led {
+    compatible = "alientek,led";
+    status = "okay";
+    led-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
+};</code></pre>
+                    <p><strong>2. 驱动核心代码：</strong></p>
+                    <pre><code>// 获取设备树节点
+struct device_node *node = of_find_node_by_path("/led");
+// 获取 GPIO 编号
+int led_gpio = of_get_named_gpio(node, "led-gpio", 0);
+// 申请 GPIO
+gpio_request(led_gpio, "led");
+// 设置为输出模式并默认拉高
+gpio_direction_output(led_gpio, 1);
+// 控制电平
+gpio_set_value(led_gpio, 0); // 点亮 LED</code></pre>
+                </div>
+
+                <div class="note-article" id="linux-beep">
+                    <h3>蜂鸣器驱动</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 8 min</span>
+                    </div>
+                    <p>与 LED 类似，本质上是控制 GPIO 的高低电平。核心在于 <code>file_operations</code> 结构体的实现。</p>
+                    <pre><code>static ssize_t beep_write(struct file *filp, const char __user *buf, size_t cnt, loff_t *offt) {
+    int ret;
+    unsigned char databuf[1];
+    ret = copy_from_user(databuf, buf, cnt);
+    if(databuf[0] == 1) gpio_set_value(beep_gpio, 0); // 响
+    else gpio_set_value(beep_gpio, 1); // 停
+    return 0;
+}</code></pre>
+                </div>
+
+                <div class="note-article" id="linux-key">
+                    <h3>按键中断驱动</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 10 min</span>
+                    </div>
+                    <p>使用 Linux 中断子系统，通过 <code>request_irq</code> 注册中断处理函数。</p>
+                    <pre><code>// 中断处理函数
+static irqreturn_t key_handler(int irq, void *dev_id) {
+    // 处理按键逻辑 (通常需要消抖，可以使用定时器)
+    return IRQ_RETVAL(IRQ_HANDLED);
+}
+
+// 获取中断号
+int irq = gpio_to_irq(key_gpio);
+// 注册中断
+request_irq(irq, key_handler, IRQF_TRIGGER_FALLING, "key_irq", &key_dev);</code></pre>
+                </div>
+
+                <div class="note-article" id="linux-concur">
+                    <h3>Linux 并发与竞争</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-hard">高级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 20 min</span>
+                    </div>
+                    <p>在多线程或中断环境中，为了保护共享资源，需要使用原子操作、自旋锁或信号量。</p>
+                    <h4>1. 原子操作 (atomic_t)</h4>
+                    <pre><code>atomic_t lock = ATOMIC_INIT(1); // 初始化原子变量为 1
+if (!atomic_dec_and_test(&lock)) { // 尝试获取锁
+    atomic_inc(&lock); // 恢复
+    return -EBUSY;
+}</code></pre>
+                    <h4>2. 自旋锁 (spinlock_t)</h4>
+                    <p>适用于短时间持有锁的情况，锁被占用时线程会原地"自旋"等待，不进入睡眠。</p>
+                    <pre><code>spinlock_t lock;
+spin_lock_init(&lock);
+spin_lock_irqsave(&lock, flags); // 保护临界区，同时关闭中断
+// ... 临界区代码 ...
+spin_unlock_irqrestore(&lock, flags);</code></pre>
+                    <h4>3. 信号量 (semaphore)</h4>
+                    <p>适用于长时间持有锁的场景，线程获取不到锁时进入睡眠，不占用 CPU 资源。</p>
+                    <pre><code>struct semaphore sem;
+sema_init(&sem, 1); // 初始化信号量为 1 (互斥锁)
+down(&sem);         // 获取信号量 (可能睡眠)
+// ... 临界区代码 ...
+up(&sem);           // 释放信号量</code></pre>
+                    <h4>4. 互斥体 (mutex)</h4>
+                    <p>比信号量更严格，只能被持有一次，不允许递归锁定。</p>
+                    <pre><code>struct mutex lock;
+mutex_init(&lock);
+mutex_lock(&lock);    // 获取锁
+// ... 临界区代码 ...
+mutex_unlock(&lock);  // 释放锁</code></pre>
+                </div>
+
+                <div class="note-article" id="linux-i2c">
+                    <h3>I2C 驱动框架 (AP3216C 传感器)</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-hard">高级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 18 min</span>
+                    </div>
+                    <p>Linux I2C 驱动分为 <strong>I2C 总线驱动</strong> (SOC 厂家实现) 和 <strong>I2C 设备驱动</strong> (用户实现)。</p>
+                    <pre><code>// I2C 设备驱动结构体
+static struct i2c_driver ap3216c_driver = {
+    .probe = ap3216c_probe,
+    .remove = ap3216c_remove,
+    .driver = {
+        .name = "ap3216c",
+        .of_match_table = ap3216c_of_match,
+    },
+};
+// 注册 I2C 驱动
+module_i2c_driver(ap3216c_driver);
+
+// 读数据函数示例
+i2c_transfer(client->adapter, msgs, 2);</code></pre>
+                </div>
+
+                <div class="note-article" id="linux-spi">
+                    <h3>SPI 驱动框架 (ICM20608 六轴陀螺仪)</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-hard">高级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 15 min</span>
+                    </div>
+                    <p>SPI 驱动与 I2C 类似，但支持全双工通信，速度更快。</p>
+                    <pre><code>// SPI 读写一个字节
+static int icm20608_read_regs(struct icm20608_dev *dev, u8 reg, void *buf, int len) {
+    struct spi_transfer t = {
+        .tx_buf = &reg,
+        .rx_buf = buf,
+        .len = len + 1,
+    };
+    return spi_sync(dev->spi, &t);
+}</code></pre>
+                </div>
+
+                <div class="note-article" id="linux-platform">
+                    <h3>Platform 平台设备驱动</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-hard">高级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 20 min</span>
+                    </div>
+                    <p>Platform 总线是 Linux 内核中用于管理 SOC 片上外设的虚拟总线，将设备资源与驱动代码分离。</p>
+                    <h4>1. Platform 驱动结构</h4>
+                    <pre><code>struct platform_driver led_platform_driver = {
+    .probe = led_probe,
+    .remove = led_remove,
+    .driver = {
+        .name = "led-driver",
+        .of_match_table = led_of_match,
+    },
+};
+
+// probe 函数：匹配成功后调用
+static int led_probe(struct platform_device *pdev) {
+    struct device_node *node = pdev->dev.of_node;
+    // 从设备树获取资源
+    return 0;
+}</code></pre>
+                    <h4>2. 设备树匹配</h4>
+                    <pre><code>static const struct of_device_id led_of_match[] = {
+    { .compatible = "alientek,led" },
+    { /* sentinel */ }
+};
+MODULE_DEVICE_TABLE(of, led_of_match);</code></pre>
+                </div>
+
+                <div class="note-article" id="linux-pinctrl">
+                    <h3>Pinctrl 与 GPIO 子系统</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-hard">高级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 15 min</span>
+                    </div>
+                    <p>Pinctrl (Pin Control) 子系统负责管理引脚的复用功能和电气属性配置。</p>
+                    <h4>1. 设备树中的 Pinctrl 配置</h4>
+                    <pre><code>&iomuxc {
+    pinctrl-names = "default";
+    pinctrl-0 = <&pinctrl_led>;
+    
+    pinctrl_led: ledgrp {
+        fsl,pins = <
+            MX6UL_PAD_GPIO1_IO03__GPIO1_IO03  0x10B0  /* LED */
+        >;
+    };
+};</code></pre>
+                    <h4>2. GPIO 子系统使用</h4>
+                    <pre><code>// 通过设备树获取 GPIO
+int gpio = of_get_named_gpio(node, "led-gpio", 0);
+// 申请并使用
+gpio_request(gpio, "led");
+gpio_direction_output(gpio, 1);
+gpio_set_value(gpio, 0);</code></pre>
+                </div>
+
+                <div class="note-article" id="linux-key">
+                    <h3>按键中断驱动</h3>
+                    <p>使用 Linux 中断子系统，通过 <code>request_irq</code> 注册中断处理函数。</p>
+                    <pre><code>// 中断处理函数
+static irqreturn_t key_handler(int irq, void *dev_id) {
+    // 处理按键逻辑 (通常需要消抖，可以使用定时器)
+    return IRQ_RETVAL(IRQ_HANDLED);
+}
+
+// 获取中断号
+int irq = gpio_to_irq(key_gpio);
+// 注册中断
+request_irq(irq, key_handler, IRQF_TRIGGER_FALLING, "key_irq", &key_dev);</code></pre>
+                </div>
+
+                <div class="note-article" id="linux-concur">
+                    <h3>Linux 并发与竞争</h3>
+                    <p>在多线程或中断环境中，为了保护共享资源，需要使用原子操作、自旋锁或信号量。</p>
+                    <h4>1. 原子操作 (atomic_t)</h4>
+                    <pre><code>atomic_t lock = ATOMIC_INIT(1); // 初始化原子变量为 1
+if (!atomic_dec_and_test(&lock)) { // 尝试获取锁
+    atomic_inc(&lock); // 恢复
+    return -EBUSY;
+}</code></pre>
+                    <h4>2. 自旋锁 (spinlock_t)</h4>
+                    <p>适用于短时间持有锁的情况，锁被占用时线程会原地“自旋”等待，不进入睡眠。</p>
+                    <pre><code>spinlock_t lock;
+spin_lock_init(&lock);
+spin_lock_irqsave(&lock, flags); // 保护临界区，同时关闭中断
+// ... 临界区代码 ...
+spin_unlock_irqrestore(&lock, flags);</code></pre>
+                </div>
+
+                <div class="note-article" id="linux-i2c">
+                    <h3>I2C 驱动框架 (AP3216C 传感器)</h3>
+                    <p>Linux I2C 驱动分为 <strong>I2C 总线驱动</strong> (SOC 厂家实现) 和 <strong>I2C 设备驱动</strong> (用户实现)。</p>
+                    <pre><code>// I2C 设备驱动结构体
+static struct i2c_driver ap3216c_driver = {
+    .probe = ap3216c_probe,
+    .remove = ap3216c_remove,
+    .driver = {
+        .name = "ap3216c",
+        .of_match_table = ap3216c_of_match,
+    },
+};
+// 注册 I2C 驱动
+module_i2c_driver(ap3216c_driver);
+
+// 读数据函数示例
+i2c_transfer(client->adapter, msgs, 2);</code></pre>
+                </div>
+
+                <div class="note-article" id="linux-spi">
+                    <h3>SPI 驱动框架 (ICM20608 六轴陀螺仪)</h3>
+                    <p>SPI 驱动与 I2C 类似，但支持全双工通信，速度更快。</p>
+                    <pre><code>// SPI 读写一个字节
+static int icm20608_read_regs(struct icm20608_dev *dev, u8 reg, void *buf, int len) {
+    struct spi_transfer t = {
+        .tx_buf = &reg,
+        .rx_buf = buf,
+        .len = len + 1,
+    };
+    return spi_sync(dev->spi, &t);
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- FPGA -->
+            <section id="fpga">
+                <div class="section-header"><h2 class="section-title">FPGA 基础</h2></div>
+                <div class="note-article">
+                    <h3>Verilog 常用语法规范</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-easy">入门</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 8 min</span>
+                    </div>
+                    <ul>
+                        <li><strong>阻塞赋值 (=):</strong> 组合逻辑中使用。</li>
+                        <li><strong>非阻塞赋值 (<=):</strong> 时序逻辑中使用。</li>
+                    </ul>
+                    <pre><code>always@(posedge clk or negedge rst_n) begin
+    if(!rst_n) q <= 0;
+    else q <= d; // 非阻塞赋值，产生 D 触发器
+end</code></pre>
+                </div>
+                <div class="note-article">
+                    <h3>按键消抖逻辑</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-easy">入门</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 5 min</span>
+                    </div>
+                    <p>通过计数器延时 20ms，避开机械按键的抖动区域。</p>
+                    <pre><code>always@(posedge clk) begin
+    if(key_in == 1) cnt <= 0;
+    else if(cnt < DELAY_20MS) cnt <= cnt + 1;
+    else key_flag <= 1; // 确认按下
+end</code></pre>
+                </div>
+                <div class="note-article" id="fpga-fsm">
+                    <h3>有限状态机 (FSM) 设计</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 15 min</span>
+                    </div>
+                    <p>状态机是 FPGA 设计的核心思想，通常采用三段式写法：状态转移、次态逻辑、输出逻辑。</p>
+                    <pre><code>// 状态定义
+parameter IDLE  = 2'b00;
+parameter START = 2'b01;
+parameter DONE  = 2'b10;
+
+reg [1:0] current_state, next_state;
+
+// 第一段：状态寄存器更新
+always@(posedge clk or negedge rst_n) begin
+    if(!rst_n) current_state <= IDLE;
+    else current_state <= next_state;
+end
+
+// 第二段：次态组合逻辑
+always@(*) begin
+    case(current_state)
+        IDLE:  if(start_sig) next_state = START;
+               else next_state = IDLE;
+        START: if(done_sig) next_state = DONE;
+               else next_state = START;
+        DONE:  next_state = IDLE;
+        default: next_state = IDLE;
+    endcase
+end
+
+// 第三段：输出逻辑
+always@(posedge clk or negedge rst_n) begin
+    if(!rst_n) out_sig <= 0;
+    else if(current_state == START) out_sig <= 1;
+    else out_sig <= 0;
+end</code></pre>
+                </div>
+                <div class="note-article" id="fpga-pwm">
+                    <h3>Verilog 实现 PWM 呼吸灯</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 10 min</span>
+                    </div>
+                    <p>通过计数器产生三角波作为占空比参考值，与固定频率的 PWM 计数器比较实现渐变效果。</p>
+                    <pre><code>module pwm_breath(
+    input clk,
+    input rst_n,
+    output reg led
+);
+    reg [15:0] cnt_pwm;    // PWM 计数器
+    reg [15:0] duty_cycle; // 当前占空比
+    
+    // PWM 计数
+    always@(posedge clk) cnt_pwm <= cnt_pwm + 1;
+    
+    // 占空比渐变 (三角波)
+    reg up_down;
+    always@(posedge clk) begin
+        if(cnt_pwm == 16'hFFFF) begin
+            if(up_down) duty_cycle <= duty_cycle + 100;
+            else duty_cycle <= duty_cycle - 100;
+            if(duty_cycle >= 16'hFFFF) up_down <= 0;
+            if(duty_cycle == 0) up_down <= 1;
+        end
+    end
+    
+    // PWM 比较输出
+    always@(posedge clk) begin
+        if(cnt_pwm < duty_cycle) led <= 1;
+        else led <= 0;
+    end
+endmodule</code></pre>
+                </div>
+            </section>
+
+            <!-- 模块学习 -->
+            <section id="modules">
+                <div class="section-header"><h2 class="section-title">模块学习</h2></div>
+                
+                <div class="note-article" id="mod-mpu6050">
+                    <h3>MPU6050 移植 DMP 姿态解算</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-hard">高级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 25 min</span>
+                    </div>
+                    <p>通过官方 MotionDriver 库输出 Pitch, Roll, Yaw 欧拉角。相比原始数据手动计算，DMP 稳定性更高。</p>
+                    <h4>1. 关键初始化步骤</h4>
+                    <pre><code>mpu_init(); // 初始化 MPU6050
+mpu_set_sensors(INV_XYZ_GYRO | INV_XYZ_ACCEL); // 开启陀螺仪和加速度计
+mpu_configure_fifo(INV_XYZ_GYRO | INV_XYZ_ACCEL); // 配置 FIFO
+mpu_set_sample_rate(DEFAULT_MPU_HZ); // 设置采样率 100Hz
+dmp_load_motion_driver_firmware(); // 加载 DMP 固件
+dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_orientation)); // 设置方向矩阵
+dmp_enable_feature(DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_TAP); // 开启 6 轴四元数和轻敲检测
+dmp_set_fifo_rate(DEFAULT_MPU_HZ); // 设置 DMP 输出速率
+mpu_set_dmp_state(1); // 开启 DMP</code></pre>
+                    <h4>2. 数据读取与解算</h4>
+                    <pre><code>// 从 FIFO 读取四元数并转为欧拉角
+if (dmp_read_fifo(gyro, accel, quat, &sensor_timestamp, &sensors, &more) == 0) {
+    q0 = quat[0] / q30; q1 = quat[1] / q30; q2 = quat[2] / q30; q3 = quat[3] / q30;
+    *pitch = asin(-2 * q1 * q3 + 2 * q0 * q2) * 57.3; // 俯仰角
+    *roll = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2 * q2 + 1) * 57.3; // 横滚角
+    *yaw = atan2(2 * (q1 * q2 + q0 * q3), q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3) * 57.3; // 偏航角
+}</code></pre>
+                </div>
+
+                <div class="note-article" id="mod-oled">
+                    <h3>基于 STM32 的 OLED 菜单 UI 设计</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 15 min</span>
+                    </div>
+                    <p>核心逻辑：将 GUI 控制与数据操作分离，使用注册操作函数的方式灵活扩展。</p>
+                    <h4>1. 缓冲刷新机制 (GRAM)</h4>
+                    <p>通过 <code>OLED_Clear_Buff</code> 清空显存而不直接写入屏幕，减少闪烁：</p>
+                    <pre><code>void OLED_Clear_Buff(void) {
+    for(u8 i=0; i<8; i++) {
+        for(u8 n=0; n<128; n++) {
+            OLED_GRAM[n][i] = 0;
+        }
+    }
+}</code></pre>
+                    <h4>2. 菜单结构体定义</h4>
+                    <pre><code>struct Menu_t {
+    struct MenuProperty_t *MenuProperty; // 菜单页参数
+    u8 displayString[15];               // 显示文本
+    void (*func1)(void);                // 绑定的功能函数
+    struct Menu_t *fatherMenu;          // 父级菜单
+    struct Menu_t *childrenMenu;        // 子级菜单
+};</code></pre>
+                </div>
+
+                <div class="note-article" id="mod-nrf24">
+                    <h3>NRF24L01 无线通信实战</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 15 min</span>
+                    </div>
+                    <p>NRF24L01 是 2.4GHz 无线收发模块，支持多通道通信，适合遥控器和传感器网络。</p>
+                    <h4>1. 发送端配置</h4>
+                    <pre><code>void NRF24L01_TX_Mode(void) {
+    CE = 0;
+    NRF24L01_Write_Buf(NRF_WRITE_REG + TX_ADDR, TX_ADDRESS, 5);
+    NRF24L01_Write_Buf(NRF_WRITE_REG + RX_ADDR_P0, TX_ADDRESS, 5);
+    NRF24L01_Write_Reg(NRF_WRITE_REG + EN_AA, 0x01);
+    NRF24L01_Write_Reg(NRF_WRITE_REG + SETUP_RETR, 0x1A);
+    NRF24L01_Write_Reg(NRF_WRITE_REG + RF_CH, 40);
+    NRF24L01_Write_Reg(NRF_WRITE_REG + RF_SETUP, 0x0F);
+    NRF24L01_Write_Reg(NRF_WRITE_REG + CONFIG, 0x0E);
+    CE = 1;
+}
+
+NRF24L01_TxPacket(tx_buf);</code></pre>
+                    <h4>2. 接收端配置</h4>
+                    <pre><code>void NRF24L01_RX_Mode(void) {
+    CE = 0;
+    NRF24L01_Write_Buf(NRF_WRITE_REG + RX_ADDR_P0, RX_ADDRESS, 5);
+    NRF24L01_Write_Reg(NRF_WRITE_REG + EN_AA, 0x01);
+    NRF24L01_Write_Reg(NRF_WRITE_REG + RF_CH, 40);
+    NRF24L01_Write_Reg(NRF_WRITE_REG + RX_PW_P0, 32);
+    NRF24L01_Write_Reg(NRF_WRITE_REG + CONFIG, 0x0F);
+    CE = 1;
+}
+
+if(NRF24L01_RxPacket(rx_buf) == 0) {
+    // 数据处理
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- 编程杂记 -->
+            <section id="misc">
+                <div class="section-header"><h2 class="section-title">编程杂记</h2></div>
+                <div class="note-article">
+                    <h3>Union 联合体数据解析</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-easy">入门</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 5 min</span>
+                    </div>
+                    <pre><code>typedef union {
+    uint8_t data[4];
+    float val;
+} float_union;
+
+float_union fu;
+fu.data[0] = uart_buf[0]; // 接收字节流
+// ...
+printf("Float value: %f", fu.val); // 直接获取浮点数</code></pre>
+                </div>
+                <div class="note-article" id="misc-circular">
+                    <h3>环形缓冲区 (Ring Buffer) 实现</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 12 min</span>
+                    </div>
+                    <p>环形缓冲区是串口数据接收、任务间通信等场景的核心数据结构。</p>
+                    <pre><code>typedef struct {
+    uint8_t *buffer;
+    uint32_t head;
+    uint32_t tail;
+    uint32_t size;
+} ring_buf_t;
+
+int ring_buf_push(ring_buf_t *rb, uint8_t data) {
+    uint32_t next = (rb->head + 1) % rb->size;
+    if (next == rb->tail) return -1; // 满
+    rb->buffer[rb->head] = data;
+    rb->head = next;
+    return 0;
+}
+
+int ring_buf_pop(ring_buf_t *rb, uint8_t *data) {
+    if (rb->head == rb->tail) return -1; // 空
+    *data = rb->buffer[rb->tail];
+    rb->tail = (rb->tail + 1) % rb->size;
+    return 0;
+}</code></pre>
+                </div>
+                <div class="note-article" id="misc-bitfield">
+                    <h3>位域与寄存器操作技巧</h3>
+                    <div class="article-meta">
+                        <span class="meta-tag"><i class="fa-solid fa-gauge-high"></i> 难度: <span class="difficulty-medium">中级</span></span>
+                        <span class="meta-tag"><i class="fa-solid fa-clock"></i> 阅读: 8 min</span>
+                    </div>
+                    <p>位域结构体可以直观地操作寄存器位，但要注意编译器内存对齐和大小端问题。</p>
+                    <pre><code>// 使用位域定义寄存器
+typedef struct {
+    uint32_t EN  : 1;   // Bit 0: 使能
+    uint32_t IE  : 1;   // Bit 1: 中断使能
+    uint32_t MODE: 3;   // Bit 2-4: 模式选择
+    uint32_t RESERVED: 27;
+} CTRL_REG_t;
+
+#define CTRL_REG (*(volatile CTRL_REG_t *)0x40021000)
+
+// 使用
+CTRL_REG.EN = 1;
+CTRL_REG.MODE = 0x3;</code></pre>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer style="margin-top: 50px; padding: 40px 0; text-align: center; border-top: 1px solid var(--border-color); background: rgba(0,0,0,0.3);">
+        <p>© 2026 雾削木的个人知识库 | 专注嵌入式全栈开发</p>
+    </footer>
+
+    <!-- 回到顶部 -->
+    <div class="back-to-top" id="backToTop">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+    </div>
+
+    <script>
+        // 侧边栏高亮与滚动同步
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section, .note-article');
+            const navLinks = document.querySelectorAll('.menu-link');
+            let current = '';
+
+            // 滚动进度条
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+
+            // 回到顶部按钮
+            if (winScroll > 300) {
+                document.getElementById("backToTop").classList.add("show");
+            } else {
+                document.getElementById("backToTop").classList.remove("show");
+            }
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            if (current) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    const href = link.getAttribute('href').substring(1);
+                    if (href === current) {
+                        link.classList.add('active');
+                        // 自动展开父级菜单
+                        const parentMenuItem = link.closest('.menu-item.has-submenu');
+                        if (parentMenuItem) {
+                            parentMenuItem.classList.add('open');
+                        }
+                    }
+                });
+            }
+        });
+
+        // 回到顶部点击事件
+        document.getElementById("backToTop").addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // 搜索功能
+        document.getElementById("searchInput").addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const articles = document.querySelectorAll('.note-article');
+            
+            articles.forEach(article => {
+                const text = article.innerText.toLowerCase();
+                if (text.includes(keyword)) {
+                    article.style.display = 'block';
+                } else {
+                    article.style.display = 'none';
+                }
+            });
+
+            // 如果搜索框为空，显示所有章节标题
+            if (keyword === "") {
+                document.querySelectorAll('section').forEach(s => s.style.display = 'block');
+            }
+        });
+
+        // 侧边栏子菜单折叠切换
+        document.querySelectorAll('.menu-item.has-submenu > .menu-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const parent = link.parentElement;
+                parent.classList.toggle('open');
+            });
+        });
+
+        // 代码复制功能
+        function copyCode(btn) {
+            const code = btn.parentElement.nextElementSibling.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = '已复制!';
+                btn.style.background = 'var(--main-blue)';
+                btn.style.color = 'white';
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.background = 'transparent';
+                    btn.style.color = '#888';
+                }, 2000);
+            });
+        }
+
+        // 动态为代码块添加复制按钮和标题栏 (如果 HTML 中没写)
+        document.querySelectorAll('pre code').forEach(codeBlock => {
+            const pre = codeBlock.parentElement;
+            if (!pre.parentElement.classList.contains('code-container')) {
+                const container = document.createElement('div');
+                container.className = 'code-container';
+                
+                const titleBar = document.createElement('div');
+                titleBar.className = 'code-title';
+                titleBar.innerHTML = `<span>Source Code</span><button class="copy-btn" onclick="copyCode(this)">复制</button>`;
+                
+                pre.parentNode.insertBefore(container, pre);
+                container.appendChild(titleBar);
+                container.appendChild(pre);
+            }
+        });
+    </script>
+</body>
+</html>

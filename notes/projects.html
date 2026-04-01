@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目实战 | 雾削木的个人知识库</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/fontawesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .project-card:hover {
+            transform: translateY(-10px);
+            background: rgba(68, 153, 213, 0.1);
+            border-color: var(--main-blue);
+            box-shadow: var(--glow-blue);
+        }
+        .project-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(68, 153, 213, 0.2);
+            color: var(--main-blue-light);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .project-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .project-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+        .project-links {
+            display: flex;
+            gap: 15px;
+        }
+        .project-link {
+            color: var(--main-blue);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .project-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="note-page">
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-ring" style="position:relative;"></div>
+        <div class="loader-text">Loading</div>
+    </div>
+
+    <div class="grid-bg"></div>
+    <div class="bg-animation"></div>
+
+    <!-- 导航栏 -->
+    <nav style="position: fixed; top: 0; left: 0; right: 0; height: 70px; background: rgba(10, 10, 15, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; z-index: 1000;">
+        <div class="logo" style="display: flex; align-items: center; gap: 12px;">
+            <div class="logo-icon" style="width: 40px; height: 40px; border-radius: 10px; background: url('https://i1.hdslb.com/bfs/face/cb0e2d1024deee2b0e360cf0acbb15b07436ee4d.jpg') center/cover no-repeat; box-shadow: var(--glow-blue);"></div>
+            <span class="logo-text" style="font-size: 1.4rem; font-weight: 700; background: linear-gradient(90deg, var(--main-blue-light), var(--text-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">雾削木</span>
+        </div>
+        <div class="nav-items">
+            <a href="../index.html" class="nav-item">返回主页</a>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width: 1200px; margin-top: 120px;">
+        <header class="note-header" style="text-align: center;">
+            <h1>个人开源项目</h1>
+            <p class="subtitle">记录每一个从 0 到 1 的实战过程，代码开源，欢迎交流</p>
+        </header>
+
+        <div class="project-grid">
+            <!-- STM32 OLED Menu UI -->
+            <div class="project-card">
+                <div class="project-tags">
+                    <span class="project-tag">STM32</span>
+                    <span class="project-tag">OLED</span>
+                    <span class="project-tag">GUI</span>
+                </div>
+                <h3 class="project-title">OLED 多级菜单 UI 设计</h3>
+                <p class="project-desc">基于 STM32F103 的 0.96 寸 OLED 屏幕菜单系统。支持多级嵌套菜单、滚动条显示、以及函数指针绑定的交互逻辑。采用 GRAM 缓冲刷新机制，极大提升了 UI 的流畅度。</p>
+                <div class="project-links">
+                    <a href="https://github.com/snqx-lqh/STM32F103C8T6HalDemo" target="_blank" class="project-link"><i class="fa-brands fa-github"></i> GitHub 源码</a>
+                </div>
+            </div>
+
+            <!-- Stm32BalanceCar -->
+            <div class="project-card">
+                <div class="project-tags">
+                    <span class="project-tag">STM32</span>
+                    <span class="project-tag">FreeRTOS</span>
+                    <span class="project-tag">PID</span>
+                </div>
+                <h3 class="project-title">Stm32BalanceCar</h3>
+                <p class="project-desc">基于 STM32C8T6 的平衡车代码设计，使用 CubeMX 配置硬件层，集成 FreeRTOS 实时操作系统实现多任务调度，核心算法采用增量式 PID 控制。</p>
+                <div class="project-links">
+                    <a href="https://github.com/snqx-lqh/Stm32BalanceCar" target="_blank" class="project-link"><i class="fa-brands fa-github"></i> GitHub 源码</a>
+                </div>
+            </div>
+
+            <!-- RaspberryPiSmartHome -->
+            <div class="project-card">
+                <div class="project-tags">
+                    <span class="project-tag">树莓派</span>
+                    <span class="project-tag">C语言</span>
+                    <span class="project-tag">智能家居</span>
+                </div>
+                <h3 class="project-title">RaspberryPiSmartHome</h3>
+                <p class="project-desc">树莓派智能家居项目，基于 wiringPi 库使用 C 语言开发。包含温湿度监测、远程灯光控制及监控系统，运行于树莓派 3B+ platform。</p>
+                <div class="project-links">
+                    <a href="https://github.com/snqx-lqh/RaspberryPiSmartHome" target="_blank" class="project-link"><i class="fa-brands fa-github"></i> GitHub 源码</a>
+                </div>
+            </div>
+
+            <!-- Stm32RemoteControl -->
+            <div class="project-card">
+                <div class="project-tags">
+                    <span class="project-tag">STM32F103</span>
+                    <span class="project-tag">NRF24L01</span>
+                    <span class="project-tag">2.4G</span>
+                </div>
+                <h3 class="project-title">Stm32RemoteControl</h3>
+                <p class="project-desc">通用的 2.4G 无线遥控器，基于 STM32F103CBT6。使用 NRF24L01 进行远距离低延迟通信，同样采用了 FreeRTOS 框架。</p>
+                <div class="project-links">
+                    <a href="https://github.com/snqx-lqh/Stm32RemoteControl" target="_blank" class="project-link"><i class="fa-brands fa-github"></i> GitHub 源码</a>
+                </div>
+            </div>
+
+            <!-- ProteusAnd89C51 -->
+            <div class="project-card">
+                <div class="project-tags">
+                    <span class="project-tag">51单片机</span>
+                    <span class="project-tag">Proteus</span>
+                    <span class="project-tag">仿真</span>
+                </div>
+                <h3 class="project-title">ProteusAnd89C51</h3>
+                <p class="project-desc">经典的 51 单片机仿真实例合集。包含数码管、LCD1602、矩阵键盘、DS1302、超声波测距等多个基础与进阶实验，适合新手学习。</p>
+                <div class="project-links">
+                    <a href="https://github.com/snqx-lqh/ProteusAnd89C51" target="_blank" class="project-link"><i class="fa-brands fa-github"></i> GitHub 源码</a>
+                </div>
+            </div>
+
+            <!-- SmartCarFourWheel -->
+            <div class="project-card">
+                <div class="project-tags">
+                    <span class="project-tag">STM32F103RCT6</span>
+                    <span class="project-tag">电机控制</span>
+                    <span class="project-tag">标准库</span>
+                </div>
+                <h3 class="project-title">SmartCarFourWheel</h3>
+                <p class="project-desc">基于 STM32F103RCT6 的四驱电机控制板。使用标准库开发，集成了 FreeRTOS 以优化电机驱动与传感器数据处理的并发性能。</p>
+                <div class="project-links">
+                    <a href="https://github.com/snqx-lqh/SmartCarFourWheel" target="_blank" class="project-link"><i class="fa-brands fa-github"></i> GitHub 源码</a>
+                </div>
+            </div>
+
+            <!-- RaspberryPiLearningNotes -->
+            <div class="project-card">
+                <div class="project-tags">
+                    <span class="project-tag">树莓派</span>
+                    <span class="project-tag">Python</span>
+                    <span class="project-tag">学习库</span>
+                </div>
+                <h3 class="project-title">RaspberryPiLearningNotes</h3>
+                <p class="project-desc">树莓派学习记录库，包含 GPIO 控制、IIC、SPI、UART 等底层协议的实现，涵盖 wiringPi、BCM2835、Python 等多种驱动方式。</p>
+                <div class="project-links">
+                    <a href="https://github.com/snqx-lqh/RaspberryPiLearningNotes" target="_blank" class="project-link"><i class="fa-brands fa-github"></i> GitHub 源码</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="margin-top: 80px; padding: 40px 0; text-align: center; border-top: 1px solid var(--border-color); background: rgba(0,0,0,0.3);">
+        <p>© 2026 雾削木的个人知识库 | 专注嵌入式全栈开发</p>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>
